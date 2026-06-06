@@ -1,0 +1,5 @@
+- name: software | lazydocker | install package
+  become_user: "{{ user }}"
+  tags: lazydocker, packages, workstation-packages
+  shell:
+    cmd: yay -S lazydocker --noconfirm

@@ -1,0 +1,8 @@
+- name: software | vim | install package
+  tags: vim, packages, workstation-packages
+  package:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - vim
+    - vi

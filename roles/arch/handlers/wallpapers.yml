@@ -1,0 +1,46 @@
+- name: create dir for wallpapers
+  file:
+    path: "/usr/share/wallpapers"
+    state: directory
+    mode: "0755"
+
+- name: unzip wallpapers
+  unarchive:
+    src: "wallpapers.tar.gz"
+    dest: "/usr/share/wallpapers"
+    mode: "0744"
+
+# - name: create dir for wallpapers gnome
+#   file:
+#     path: "{{ home }}/Wallpapers"
+#     state: directory
+#     owner: "{{ user }}"
+#     group: "{{ user }}"
+#     mode: "0764"
+#
+# - name: unzip wallpapers gnome
+#   unarchive:
+#     src: "wallpapers.tar.gz"
+#     dest: "{{ home }}/Wallpapers"
+#     owner: "{{ user }}"
+#     group: "{{ user }}"
+#     mode: "0764"
+#     extra_opts: --strip-components=1
+
+- name: create user wallpapers dir
+  file:
+    path: "{{ home }}/Wallpapers"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0764"
+
+- name: unzip wallpapers to user home
+  unarchive:
+    src: "wallpapers.tar.gz"
+    dest: "{{ home }}/Wallpapers"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0764"
+    extra_opts:
+      - --strip-components=1

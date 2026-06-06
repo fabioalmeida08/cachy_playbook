@@ -1,0 +1,8 @@
+- name: software | yazi | install package
+  tags: yazi, packages, workstation-packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - yazi
+    - ffmpegthumbnailer

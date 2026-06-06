@@ -1,0 +1,9 @@
+- name: enable ufw
+  tags: ufw, service
+  service:
+    name: ufw
+    enabled: yes
+
+- name: start ufw
+  shell:
+    cmd: ufw enable

@@ -1,0 +1,5 @@
+- name: software | kitty | install package
+  tags: kitty, packages, workstation-packages
+  package:
+    name: kitty
+    state: latest

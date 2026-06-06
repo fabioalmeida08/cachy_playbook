@@ -1,0 +1,32 @@
+- name: desktop env | bspwm |
+  tags: desktop env
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - lightdm
+    - lightdm-gtk-greeter
+    - nitrogen
+    - picom
+    - xorg
+    - arandr
+    - dmenu
+    - qt5ct
+    - qt6ct
+    - lxappearance
+    - gnome-themes-extra
+    - xdg-user-dirs
+  notify:
+    - add qt5ct desk env
+    - enable lightdm
+    - config lightdm-greeter
+    - config lightdm-gtk-greeter
+    - create default xdg dirs
+    - create dir for wallpapers
+    - unzip wallpapers
+
+- name: software | dwm | install package
+  become_user: "{{ user }}"
+  tags: dwm, packages, workstation-packages
+  shell:
+    cmd: yay -S dwm --noconfirm

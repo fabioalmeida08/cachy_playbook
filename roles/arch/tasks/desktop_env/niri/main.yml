@@ -1,0 +1,47 @@
+- name: desktop env | niri
+  tags: desktop env
+  package:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - niri
+    - swaync
+    - polkit-kde-agent
+    - wlsunset
+    - xwayland-satellite
+    - xdg-desktop-portal-gnome
+    - xdg-desktop-portal-gtk
+    - alacritty
+    - waybar
+    - fuzzel
+    - swaybg
+    - swayidle
+    - swaylock
+    - udiskie
+    - xdg-utils
+    - xdg-user-dirs
+    - wireless_tools
+    - wpa_supplicant
+    - redshift
+    - nwg-look
+    - lxappearance
+    - materia-gtk-theme
+    - adw-gtk-theme
+    - qt5ct
+    - qt6ct
+    - thunar
+    - ttf-font-awesome
+    - network-manager-applet
+    - evince
+    - brightnessctl
+    - xorg-xwayland
+    - ly
+    - wl-clipboard
+  notify:
+    - create default xdg dirs
+    - set defautl dark theme
+    - config ly
+    - create user wallpapers dir
+    - unzip wallpapers to user home
+
+

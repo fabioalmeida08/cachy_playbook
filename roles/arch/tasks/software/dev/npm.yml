@@ -1,0 +1,5 @@
+- name: software | npm | install package
+  tags: npm, packages, workstation-packages
+  package:
+    name: npm
+    state: latest

@@ -1,0 +1,5 @@
+- name: software | proton-up | install package
+  become_user: "{{ user }}"
+  tags: protonup-qt, packages, workstation-packages
+  shell:
+    cmd: yay -S protonup-qt --noconfirm

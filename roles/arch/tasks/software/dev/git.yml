@@ -1,0 +1,5 @@
+- name: software | git | install package
+  tags: git, packages, workstation-packages
+  package:
+    name: git
+    state: latest

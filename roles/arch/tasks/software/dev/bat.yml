@@ -1,0 +1,5 @@
+- name: software | bat | install package
+  tags: bat, packages, workstation-packages
+  package:
+    name: bat
+    state: latest

@@ -1,0 +1,3 @@
+- name: create default xdg dirs
+  become_user: "{{ user }}"
+  ansible.builtin.command: xdg-user-dirs-update

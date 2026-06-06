@@ -1,0 +1,19 @@
+- name: ensure group docker exists
+  tags: docker, group
+  group:
+    name: docker
+    state: present
+
+- name: add user to docker group
+  tags: docker, group, add user
+  user:
+    name: "{{ user }}"
+    groups: docker
+    append: yes
+
+- name: start docker
+  tags: docker, service
+  service:
+    name: docker
+    state: started
+    enabled: yes

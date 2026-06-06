@@ -1,0 +1,10 @@
+- name: desktop env | plasma |
+  tags: desktop env
+  package:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - plasma
+    - dolphin
+  notify:
+    - set sddm

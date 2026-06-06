@@ -1,0 +1,8 @@
+- name: software | neovim | install package
+  tags: neovim, packages, workstation-packages
+  package:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - neovim
+    - neovide

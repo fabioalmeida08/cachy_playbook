@@ -1,0 +1,49 @@
+- name: desktop env | i3wm
+  tags: desktop env
+  package:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - xorg
+    - lightdm
+    - lightdm-gtk-greeter
+    - i3-wm
+#   - i3lock
+    - xss-lock
+    - rofi
+    - polybar
+    - dmenu
+    - xdg-utils
+    - xdg-user-dirs
+    - wireless_tools
+    - wpa_supplicant
+    - gvfs
+    - xdotool
+    - redshift
+    - lxappearance
+    - picom
+    - dunst
+    - materia-gtk-theme
+    - qt5ct
+    - qt6ct
+    - papirus-icon-theme
+    - feh
+    - thunar
+    - ttf-font-awesome
+    - arandr
+    - network-manager-applet
+    - evince
+    - brightnessctl
+  notify:
+    - enable lightdm
+    - create default xdg dirs
+    - config lightdm-greeter
+    - config lightdm-gtk-greeter
+    - add qt5ct desk env
+    - set dotfiles
+    - extract wallpapers
+    - set lightdm-gtk-greeter wallpaper
+    - config lid to block
+    - config lid to lock when docked
+    - config idle action to ignore
+

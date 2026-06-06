@@ -1,0 +1,5 @@
+- name: software | flameshot | install package
+  tags: flameshot, packages, workstation-packages
+  package:
+    name: flameshot
+    state: latest

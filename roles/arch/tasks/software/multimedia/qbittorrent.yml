@@ -1,0 +1,5 @@
+- name: software | qbittorrent | install package
+  tags: qbittorrent, packages, workstation-packages
+  package:
+    name: qbittorrent
+    state: latest

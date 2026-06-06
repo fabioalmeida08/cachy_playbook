@@ -1,0 +1,9 @@
+- name: drivers |  bluetooth
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - bluez
+    - bluez-utils
+    - bluetui
+  notify: enable bluetooth

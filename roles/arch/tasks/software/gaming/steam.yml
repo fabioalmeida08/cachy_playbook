@@ -1,0 +1,8 @@
+- name: software | steam | install package
+  tags: steam, packages, workstation-packages
+  package:
+    name: steam
+    state: latest
+  notify: "{{ item }}"
+  loop:
+    - install mangohud

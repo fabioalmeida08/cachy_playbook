@@ -1,0 +1,5 @@
+- name: software | prometheus | install package
+  tags: prometheus, packages, workstation-packages
+  package:
+    name: prometheus
+    state: latest

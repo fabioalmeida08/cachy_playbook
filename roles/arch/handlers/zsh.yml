@@ -1,0 +1,67 @@
+- name: install powerlevel10k theme
+  tags: powerlevel10k, theme, zsh
+  git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: "{{ home }}/.oh-my-zsh/custom/themes/powerlevel10k"
+  notify: "{{ item }}"
+  loop:
+    - source custom p10k config
+    - set login shell to zsh
+
+- name: set powerlevel10k for zsh theme
+  tags: powerlevel10k, theme, zsh
+  lineinfile:
+    path: "{{ home }}/.zshrc"
+    regexp: "^ZSH_THEME="
+    line: ZSH_THEME="powerlevel10k/powerlevel10k"
+
+- name: source custom p10k config
+  tags: powerlevel10k, theme, zsh
+  lineinfile:
+    path: "{{ home }}/.zshrc"
+    line: source ~/.p10k.zsh
+
+- name: set aliases
+  tags: aliases, zsh
+  lineinfile:
+    path: "{{ home }}/.zshrc"
+    line: |
+      # aliases
+      alias ssh="kitty +kitten ssh" 
+      alias tda="todo.sh add"
+      alias td="todo.sh"
+      alias tdl="todo.sh ls"
+      alias vg="vagrant"
+      alias vgu="vagrant up"
+      alias vgp="vagrant provision"
+      alias vgh="vagrant halt"
+      alias vgd="vagrant destroy -f"
+      alias vgs="vagrant ssh"
+      alias ap="ansible-playbook"
+      alias kl="kubectl"
+      alias kcf="kubectl create -f"
+      alias kaf="kubectl apply -f"
+      alias kgp="kubectl get pods"
+      alias kgpv="kubectl get pv"
+      alias kgpvc="kubectl get pvc"
+      alias ksc='f(){ kubectl config set-context $(kubectl config current-context) --namespace="$1";  unset -f f; }; f'
+      alias kcn="kubectl create ns"
+      alias kd="kubectl describe"
+      alias kdg='f(){ kubectl describe "$1" | grep "$2";  unset -f f; }; f'
+      alias kdlf="kubectl delete -f"
+      alias kdl="kubectl delete"
+      alias r="ranger"
+      alias ta="task add"
+      alias tl="task list"
+      alias td="task done"
+      alias bt="btop"
+      alias pof="poweroff"
+      alias rbt="reboot"
+      alias ls="lsd"
+      alias yup="yay --noconfirm"
+      alias yof="yup ; pof"
+#      source /usr/share/bash-completion/completions/aws
+
+- name: set login shell to zsh
+  ansible.builtin.command: usermod --shell /bin/zsh {{ user }}
+  become: true

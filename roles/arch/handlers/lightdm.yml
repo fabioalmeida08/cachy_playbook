@@ -1,0 +1,49 @@
+- name: enable lightdm
+  service:
+    name: lightdm
+    enabled: true
+
+- name: config lightdm-greeter
+  lineinfile:
+    path: "/etc/lightdm/lightdm.conf"
+    regexp: "^#greeter-session="
+    line: "greeter-session=lightdm-gtk-greeter"
+
+- name: config lightdm-gtk-greeter
+  lineinfile:
+    path: "/etc/lightdm/lightdm-gtk-greeter.conf"
+    line: |
+      [greeter]
+      theme-name = Adwaita-dark
+      icon-theme-name = Adwaita
+      background = /usr/share/pixmaps/~
+      position = 1%,start 50%,center
+      hide-user-image = true
+      font-name = FireCode Nerd Font 10
+      indicators = ~host;~spacer;~clock;~session;~layout;~power
+
+- name: extract wallpapers
+  become_user: "{{ user }}"
+  shell: sh -c "tar -xzf {{ home }}/arch_playbook/wallpapers.tar.gz ; mkdir -p {{ home }}/Wallpapers/ ; cp -r {{ home }}/arch_playbook/walls/* {{ home }}/Wallpapers/ ; rm -rf {{ home }}/arch_playbook/walls"
+
+- name: set lightdm-gtk-greeter wallpaper
+  command: "cp {{ home }}/Wallpapers/copland.png /usr/share/pixmaps/~"
+
+
+- name: config lid to block
+  lineinfile:
+    path: /etc/systemd/logind.conf
+    regexp: '^#?HandleLidSwitch='
+    line: 'HandleLidSwitch=lock'
+
+- name: config lid to lock when docked
+  lineinfile:
+    path: /etc/systemd/logind.conf
+    regexp: '^#?HandleLidSwitchDocked='
+    line: 'HandleLidSwitchDocked=lock'
+
+- name: config idle action to ignore
+  lineinfile:
+    path: /etc/systemd/logind.conf
+    regexp: '^#?IdleAction='
+    line: 'IdleAction=ignore'

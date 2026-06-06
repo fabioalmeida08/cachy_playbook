@@ -1,0 +1,10 @@
+- name: network-tools
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - net-tools
+    - bind-tools
+    - traceroute
+    - mtr
+    - nmap

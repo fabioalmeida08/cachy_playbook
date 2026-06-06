@@ -1,0 +1,5 @@
+- name: software | lazygit | install package
+  tags: lazygit, packages, workstation-packages
+  package:
+    name: lazygit
+    state: latest

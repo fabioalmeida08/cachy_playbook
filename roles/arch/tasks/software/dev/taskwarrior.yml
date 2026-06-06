@@ -1,0 +1,5 @@
+- name: software | task | install package
+  tags: task, packages, workstation-packages
+  package:
+    name: task
+    state: latest

@@ -1,0 +1,47 @@
+# - name: software | gnome | install package
+#   tags: gnome, packages, workstation-packages
+#   shell:
+#     cmd: pacman -S gnome --noconfirm --overwrite '*'
+#   notify:
+#     - add qt5ct desk env
+#     - enable gdm
+
+- name: desktop env | gnome |
+  tags: desktop env
+  package:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - evince
+    - gdm
+    - gnome-backgrounds
+    - gnome-calculator
+    - gnome-color-manager
+    - gnome-disk-utility
+    - gnome-logs
+    - gnome-menus
+    - gnome-session
+    - gnome-settings-daemon
+    - gnome-shell
+    - gnome-shell-extensions
+    - gnome-shell-extension-appindicator
+    - gnome-system-monitor
+    - gnome-control-center
+    - gnome-tweaks
+    - gvfs-google
+    - gvfs-nfs
+    - gvfs-smb
+    - xdg-user-dirs
+    - baobab
+    - nautilus
+  notify:
+    - add qt5ct desk env
+    - enable gdm
+    - install pacman update indicator
+    - create default xdg dirs
+    - install extension-manager
+#    - install custom extensions
+    - create dir for wallpapers gnome
+    - unzip wallpapers gnome
+#    - enable shell extensions
+    - set shortcuts

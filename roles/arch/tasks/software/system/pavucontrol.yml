@@ -1,0 +1,5 @@
+- name: software | pavucontrol | install package
+  tags: pavucontrol, packages, workstation-packages
+  package:
+    name: pavucontrol
+    state: latest

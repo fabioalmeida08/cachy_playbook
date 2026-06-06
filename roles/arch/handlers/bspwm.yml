@@ -1,0 +1,15 @@
+- name: give execute permission to files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0755"
+  loop:
+    - "{{ home }}/.config/bspwm/bspwmrc"
+    - "{{ home }}/.config/polybar/launch.sh"
+    - "{{ home }}/.config/polybar/scripts/updates.sh"
+
+- name: add qt5ct desk env
+  lineinfile:
+    path: "/etc/environment"
+    line: 'QT_QPA_PLATFORMTHEME="qt5ct"'

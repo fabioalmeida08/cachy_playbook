@@ -1,0 +1,5 @@
+- name: software | 7zip | install package
+  tags: 7zip, packages, workstation-packages
+  package:
+    name: 7zip
+    state: latest

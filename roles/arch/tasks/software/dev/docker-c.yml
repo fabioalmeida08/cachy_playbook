@@ -1,0 +1,5 @@
+- name: software | docker-compose | install package
+  tags: docker-compose, packages, workstation-packages
+  package:
+    name: docker-compose
+    state: latest

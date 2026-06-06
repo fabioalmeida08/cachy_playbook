@@ -1,0 +1,33 @@
+- name: Retrieve Dotfiles
+  tags: git, dotfiles, config
+  git:
+    repo: "https://github.com/fabioalmeida08/dotfiles"
+    dest: "{{ home }}/.dotfiles"
+
+- name: Place dotfiles on right dirs
+  tags: git, dotfiles, config
+  copy:
+    src: "{{ home }}/.dotfiles/{{ item.file_name }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0764
+  loop:
+    - { file_name: ".gitconfig", dest: "{{ home }}" }
+    - { file_name: ".scripts", dest: "{{ home }}" }
+    - { file_name: "kitty", dest: "{{ home }}/.config/" }
+    - { file_name: ".p10k.zsh", dest: "{{ home }}" }
+    - { file_name: ".vimrc", dest: "{{ home }}" }
+    - { file_name: "bspwm", dest: "{{ home }}/.config" }
+    - { file_name: "sxhkd", dest: "{{ home }}/.config" }
+    - { file_name: "polybar", dest: "{{ home }}/.config" }
+    - { file_name: "picom", dest: "{{ home }}/.config" }
+    - { file_name: "ranger", dest: "{{ home }}/.config"}
+    - { file_name: "dconf", dest: "{{ home }}/.config"}
+    - { file_name: "mpv", dest: "{{ home }}/.config"}
+    - { file_name: "MangoHud", dest: "{{ home }}/.config"}
+  notify:
+    - setup git config
+    - set window title shortcut
+    - set mangohud output
+

@@ -1,0 +1,9 @@
+- name: software | devops-tools | install package
+  tags: aws, packages, workstation-packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - aws-vault
+    - aws-cli
+    - terraform

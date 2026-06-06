@@ -1,0 +1,16 @@
+- name: fonts
+  tags: fonts, meslo
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - ttf-meslo-nerd
+    - ttf-firacode-nerd
+    - ttf-iosevka-nerd
+    - ttf-liberation
+    - ttf-jetbrains-mono-nerd
+    - adobe-source-han-sans-jp-fonts
+    - adobe-source-han-sans-cn-fonts
+    - adobe-source-han-sans-kr-fonts
+    - noto-fonts-emoji
+  notify: locales config

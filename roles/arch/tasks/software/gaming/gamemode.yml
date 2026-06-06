@@ -1,0 +1,8 @@
+- name: software | gamemode | install package
+  tags: gamemode, packages, workstation-packages
+  package:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - gamemode
+    - lib32-gamemode

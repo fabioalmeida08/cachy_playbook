@@ -1,0 +1,8 @@
+- name: drivers | install GPU drivers
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - mesa
+    - libva-mesa-driver
+    - vulkan-intel

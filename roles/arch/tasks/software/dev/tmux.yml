@@ -1,0 +1,5 @@
+- name: software | tmux | install package
+  tags: tmux, packages, workstation-packages
+  package:
+    name: tmux
+    state: latest

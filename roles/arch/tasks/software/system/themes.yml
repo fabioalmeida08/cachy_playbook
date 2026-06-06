@@ -1,0 +1,18 @@
+- name: software | qtct | install package
+  tags: qtct, packages, workstation-packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - qt5ct
+    - qt6ct
+    - gnome-themes-extra
+    - papirus-icon-theme
+    - dconf
+    - dconf-editor
+
+# - name: software | adwaita-theme | install package
+#   become_user: "{{ user }}"
+#   tags: adwaita themes, packages, themes
+#   shell:
+#     cmd: yay -S adwaita-qt5-git adwaita-qt6-git bibata-cursor-theme --noconfirm

@@ -1,0 +1,6 @@
+- name: software | prometheus-node-exporter | install package
+  tags: prometheus-node-exporter, packages, workstation-packages
+  package:
+    name: prometheus-node-exporter
+    state: latest
+  notify: start prometheus-node-exporter service

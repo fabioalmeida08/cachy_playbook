@@ -1,0 +1,6 @@
+- name: software | openssh | install package
+  tags: openssh, packages, workstation-packages
+  package:
+    name: openssh
+    state: latest
+  notify: Create GitHub SSH key pair

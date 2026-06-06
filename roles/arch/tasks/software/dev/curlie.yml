@@ -1,0 +1,5 @@
+- name: software | curlie | install package
+  tags: curlie, packages, workstation-packages
+  package:
+    name: curlie
+    state: latest

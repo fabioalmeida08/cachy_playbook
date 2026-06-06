@@ -1,0 +1,5 @@
+- name: set sddm
+  tags: sddm, service
+  service:
+    name: sddm
+    enabled: yes

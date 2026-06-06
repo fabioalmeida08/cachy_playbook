@@ -1,0 +1,5 @@
+- name: software | unzip | install package
+  tags: unzip, packages, workstation-packages
+  package:
+    name: unzip
+    state: latest

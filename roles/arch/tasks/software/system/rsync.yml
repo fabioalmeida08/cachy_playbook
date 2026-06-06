@@ -1,0 +1,5 @@
+- name: software | rsync | install package
+  tags: rsync, packages, workstation-packages
+  package:
+    name: rsync
+    state: latest

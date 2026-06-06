@@ -1,0 +1,11 @@
+- name: software | ufw | install package
+  tags: ufw, packages, workstation-packages
+  package:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - ufw
+    - gufw
+  notify:
+    - enable ufw
+    - start ufw

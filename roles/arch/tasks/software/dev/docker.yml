@@ -1,0 +1,12 @@
+- name: software | docker | install package
+  tags: docker, packages, workstation-packages
+  package:
+    name: docker
+    state: latest
+  notify: "{{ item }}"
+  loop:
+    - start docker
+    - ensure group docker exists
+    - add user to docker group
+# - name: Flush handlers
+#   meta: flush_handlers

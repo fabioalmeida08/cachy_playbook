@@ -1,0 +1,29 @@
+- name: config autostart desktopfile
+  tags: desktop file, config, script, autostart
+  lineinfile:
+    path: "{{ home }}/.config/autostart/modmap.desktop"
+    regexp: "^Exec"
+    line: "Exec={{ home }}/.scripts/modmap.sh"
+
+- name: setup git config
+  tags: gitconfig, config
+  lineinfile:
+    path: "{{ home }}/.gitconfig"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^name", line: "name = {{ git_username }}" }
+    - { regexp: "^email", line: "email = {{ git_email }}" }
+
+- name: set window title shortcut
+  tags: dconf, config
+  lineinfile:
+    path: "{{ home }}/.config/dconf/settings.dconf"
+    regexp: "^command='bash'"
+    line: "command='bash {{ home }}/.scripts/toggle-window-title.sh'"
+
+- name: Create GitHub SSH key pair
+  become_user: "{{ user }}"
+  tags: ssh, config
+  ansible.builtin.command:
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ''

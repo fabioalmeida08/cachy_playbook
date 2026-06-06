@@ -1,0 +1,9 @@
+- name: software | lutris | install package
+  tags: lutris, packages, workstation-packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - lutris
+    - wine-mono
+    - wine-gecko

@@ -1,0 +1,5 @@
+- name: software | xorg | install package
+  tags: xorg, packages, workstation-packages
+  package:
+    name: xorg
+    state: latest

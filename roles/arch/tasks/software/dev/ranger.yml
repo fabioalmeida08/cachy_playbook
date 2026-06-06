@@ -1,0 +1,23 @@
+- name: software | ranger | install package
+  tags: ranger, packages, workstation-packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - ranger
+    - atool
+    - file
+    - ffmpegthumbnailer
+    - highlight
+    - imagemagick
+    - jq
+    - libcaca
+    - librsvg
+    - mediainfo
+    - perl-image-exiftool
+    - poppler
+    - python-chardet
+    - python-pygments
+    - transmission-cli
+    - ueberzug
+    - djvulibre

@@ -1,0 +1,40 @@
+- hosts: localhost
+  connection: local
+  become: true
+  vars:
+    distro: "{{ ansible_facts['distribution'] }}"
+
+  pre_tasks:
+    - name: pre-run | check requirements
+      tags: always
+      package:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - python-psutil
+        - python-pip
+        - python-setuptools
+
+    - name: Enable Multilib
+      replace:
+        path: "/etc/pacman.conf"
+        regexp: '#\[multilib]\n#Include = \/etc\/pacman.d\/mirrorlist'
+        replace: |
+          [multilib]
+          Include = /etc/pacman.d/mirrorlist
+      when: distro == 'Archlinux'
+
+    - name: pacman -Syu
+      pacman:
+        update_cache: true
+        upgrade: true
+
+- hosts: localhost
+  tags: arch
+  vars:
+    home: "/home/{{ ansible_facts['env']['SUDO_USER'] }}"  # Correção aqui
+    user: "{{ ansible_facts['env']['SUDO_USER'] }}"
+    ipaddr: "{{ ansible_facts['default_ipv4']['address'] }}"
+  become: true
+  roles:
+    - arch

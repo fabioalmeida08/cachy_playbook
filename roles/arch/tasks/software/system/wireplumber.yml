@@ -1,0 +1,10 @@
+- name: software | wireplumber | install package
+  tags: wireplumber, packages, workstation-packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - pipewire
+    - wireplumber
+    - pipewire-pulse
+    - pipewire-audio

@@ -1,0 +1,8 @@
+- name: Enable Multilib
+  replace:
+    path: "/etc/pacman.conf"
+    regexp: '#\[multilib]\n#Include = \/etc\/pacman.d\/mirrorlist'
+    replace: |
+      [multilib]
+      Include = /etc/pacman.d/mirrorlist
+    notify: update cache

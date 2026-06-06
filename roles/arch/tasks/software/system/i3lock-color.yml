@@ -1,0 +1,5 @@
+- name: software | i3lock color | install package
+  become_user: "{{ user }}"
+  tags: i3lock color , drivers
+  shell:
+    cmd: yay -S i3lock-color --noconfirm

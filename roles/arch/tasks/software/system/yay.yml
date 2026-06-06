@@ -1,0 +1,29 @@
+- name: clone yay repo
+  become_user: "{{ user }}"
+  git:
+    repo: https://aur.archlinux.org/yay-bin.git
+    dest: "{{ home }}/yay"
+    update: true
+
+- name: build and install yay
+  become_user: "{{ user }}"
+  command:
+    chdir: "{{ home }}/yay"
+    cmd: "makepkg -si --noconfirm"
+    creates: /usr/bin/yay
+
+
+
+# - name: build and install yay
+#   become_user: "{{ user }}"
+#   command:
+#     chdir: "{{ home }}/yay"
+#     cmd: "makepkg -si --noconfirm"
+#     creates: /usr/bin/yay
+  # notify: remove yay git repository
+
+# - name: software | yay | install package
+#   become_user: '{{ user }}'
+#   tags: yay
+#   shell:
+#     cmd: pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin && makepkg -si

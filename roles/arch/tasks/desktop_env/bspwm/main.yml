@@ -1,0 +1,31 @@
+- name: desktop env | bspwm |
+  tags: desktop env
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - lightdm
+    - lightdm-gtk-greeter
+    - bspwm
+    - sxhkd
+    - nitrogen
+    - picom
+    - rofi
+    - polybar
+    - xorg
+    - arandr
+    - dmenu
+    - qt5ct
+    - qt6ct
+    - lxappearance
+    - gnome-themes-extra
+    - xdg-user-dirs
+  notify:
+    - give execute permission to files
+    - add qt5ct desk env
+    - enable lightdm
+    - config lightdm-greeter
+    - config lightdm-gtk-greeter
+    - create default xdg dirs
+    - create dir for wallpapers
+    - unzip wallpapers

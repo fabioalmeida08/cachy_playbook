@@ -1,0 +1,5 @@
+- name: software | xclip | install package
+  tags: xclip, packages, workstation-packages
+  package:
+    name: xclip
+    state: latest

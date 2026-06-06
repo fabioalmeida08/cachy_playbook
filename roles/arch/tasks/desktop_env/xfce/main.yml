@@ -1,0 +1,23 @@
+- name: desktop env | xfce4
+  tags: desktop env
+  package:
+    name: '{{ item }}'
+    state: latest
+  loop:
+    - xfce4
+    - xfce4-goodies
+    - xdg-utils
+    - xdg-user-dirs
+    - wireless_tools
+    - wpa_supplicant
+    - gvfs
+    - lightdm-gtk-greeter
+    - xdotool
+    - redshift
+  notify:
+    - enable lightdm
+    - create default xdg dirs
+    - config lightdm-greeter
+    - config lightdm-gtk-greeter
+    - extract wallpapers
+    - set xfce4 dotfiles
