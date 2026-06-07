@@ -27,7 +27,7 @@ install_yay () {
 }
 
 install_yay_pkgs () {
-    yay -S zen-browser-bin code --noconfirm
+    yay -S zen-browser-bin helium-browser-bin --noconfirm
 }
 
 sudo pacman -Syu
