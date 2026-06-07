@@ -1,47 +1,40 @@
+# 1️⃣ Instala pacotes
 - name: desktop env | niri
-  tags: desktop env
+  tags:
+    - desktop
+    - niri
+  become: true
   package:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: latest
   loop:
-    - niri
-    - swaync
-    - polkit-kde-agent
     - wlsunset
-    - xwayland-satellite
-    - xdg-desktop-portal-gnome
-    - xdg-desktop-portal-gtk
-    - alacritty
-    - waybar
-    - fuzzel
-    - swaybg
-    - swayidle
-    - swaylock
-    - udiskie
-    - xdg-utils
-    - xdg-user-dirs
-    - wireless_tools
     - wpa_supplicant
-    - redshift
-    - nwg-look
-    - lxappearance
-    - materia-gtk-theme
-    - adw-gtk-theme
-    - qt5ct
-    - qt6ct
     - thunar
-    - ttf-font-awesome
-    - network-manager-applet
     - evince
-    - brightnessctl
-    - xorg-xwayland
     - ly
-    - wl-clipboard
-  notify:
-    - create default xdg dirs
-    - set defautl dark theme
-    - config ly
-    - create user wallpapers dir
-    - unzip wallpapers to user home
 
+# 2️⃣ Remove SDDM
+- name: Desativar SDDM se estiver habilitado
+  tags: ly
+  become: true
+  shell: |
+    if systemctl is-enabled --quiet sddm 2>/dev/null; then
+      systemctl disable sddm
+    fi
 
+- name: Remover pacote SDDM se existir
+  tags: ly
+  become: true
+  shell: |
+    if pacman -Qs sddm > /dev/null; then
+      pacman -Rns --noconfirm sddm
+    fi
+
+# 3️⃣ Ativa Ly
+- name: Habilitar Ly no tty1 e desabilitar getty
+  tags: ly
+  become: true
+  shell: |
+    systemctl enable ly@tty1.service
+    systemctl disable getty@tty1.service

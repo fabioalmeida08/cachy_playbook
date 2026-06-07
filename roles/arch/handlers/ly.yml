@@ -1,3 +1,27 @@
-- name: config ly
+- name: Desativar SDDM se estiver habilitado
   tags: ly
-  shell: sh -c "sudo systemctl enable ly@tty1.service; sudo systemctl disable getty@tty1.service"
+  become: true
+  shell: |
+    if systemctl is-enabled --quiet sddm 2>/dev/null; then
+      systemctl disable sddm
+    fi
+
+- name: Remover pacote SDDM se existir
+  tags: ly
+  become: true
+  shell: |
+    if pacman -Qs sddm > /dev/null; then
+      pacman -Rns --noconfirm sddm
+    fi
+
+- name: Instalar Ly se não estiver instalado
+  tags: ly
+  become: true
+  shell: pacman -S --needed --noconfirm ly
+
+- name: Habilitar Ly no tty1 e desabilitar getty
+  tags: ly
+  become: true
+  shell: |
+    systemctl enable ly@tty1.service
+    systemctl disable getty@tty1.service

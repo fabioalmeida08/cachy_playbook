@@ -25,7 +25,6 @@
 - import_tasks: software/dev/zoxide.yml
 
 #--------------System packages----------------
-- import_tasks: software/system/xorg.yml
 - import_tasks: software/system/bashtop.yml
 - import_tasks: software/system/unzip.yml
 - import_tasks: software/system/wireplumber.yml
@@ -44,38 +43,17 @@
 - import_tasks: software/multimedia/mpv.yml
 - import_tasks: software/multimedia/qbittorrent.yml
 
-#--------------Aur packages-------------------
-# - import_tasks: software/multimedia/zen-browser.yml
-# - import_tasks: software/dev/code.yml
-# - import_tasks: software/system/yay.yml
-# - import_tasks: software/multimedia/brave.yml
-# - import_tasks: software/dev/lazydocker.yml
-
 #--------------Gaming-------------------------
 - import_tasks: software/gaming/steam.yml
-# - import_tasks: software/gaming/lutris.yml
-# - import_tasks: software/gaming/protonup-qt.yml
+# import_tasks: software/gaming/protonup-qt.yml
 - import_tasks: software/gaming/gamemode.yml
 
-#--------------Desktop Evns-------------------
-# - import_tasks: desktop_env/i3/main.yml
-# - import_tasks: software/system/i3lock-color.yml
-# - import_tasks: desktop_env/xfce/main.yml
-# - import_tasks: desktop_env/hyprland/main.yml
-# - import_tasks: desktop_env/gnome/main.yml
-# - import_tasks: desktop_env/kde-plasma/main.yml
 - import_tasks: desktop_env/niri/main.yml
 
 #--------------Dotfiles-----------------------
-- import_tasks: software/dev/stow.yml
+- import_tasks: software/dev/stow.yml  
 
 #--------------Others packages/configs--------
 - import_tasks: software/system/themes.yml
-- import_tasks: software/system/ufw.yml
-- import_tasks: software/system/dnsmasq.yml
-- import_tasks: software/system/bluetooth.yml # notebook 
+- import_tasks: software/system/bluetooth.yml 
 
-#--------------Video Drivers------------------
-#- import_tasks: software/system/video-drivers.yml # notebook
-#- import_tasks: software/system/nvidia-notebook.yml # notebook
-# - import_tasks: software/system/nvidia-drivers.yml
