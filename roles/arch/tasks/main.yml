@@ -25,6 +25,7 @@
 - import_tasks: software/dev/zoxide.yml
 
 #--------------System packages----------------
+- import_tasks: software/system/intel-grafx.yml
 - import_tasks: software/system/bashtop.yml
 - import_tasks: software/system/unzip.yml
 - import_tasks: software/system/wireplumber.yml
@@ -51,9 +52,9 @@
 - import_tasks: desktop_env/niri/main.yml
 
 #--------------Dotfiles-----------------------
-- import_tasks: software/dev/stow.yml  
+- import_tasks: software/dev/stow.yml
 
 #--------------Others packages/configs--------
 - import_tasks: software/system/themes.yml
-- import_tasks: software/system/bluetooth.yml 
+- import_tasks: software/system/bluetooth.yml
 

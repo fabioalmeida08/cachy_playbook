@@ -1,0 +1,8 @@
+- name: intel-graphics-drivers
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - mesa
+    - vulkan-intel
+    - intel-media-driver
