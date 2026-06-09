@@ -1,7 +1,7 @@
 - name: set dotfiles
   tags: stow
   become_user: "{{ user }}"
-  shell: sh -c "cd ; git clone https://github.com/fabioalmeida08/.dotfiles ; cd .dotfiles ; stow -R --adopt -t ~ */ ; git restore . ; cd niri/.config/niri ; mv config.kdl config.kdl.bak ; mv config_lenovo.kdl config.kdl"
+  shell: sh -c "cd ; git clone https://github.com/fabioalmeida08/.dotfiles ; cd .dotfiles ; stow -R --adopt -t ~ */ ; git restore . ; cd niri/.config/niri ; cp config.kdl config.kdl.bak"
 
 
 - name: set xfce4 dotfiles
