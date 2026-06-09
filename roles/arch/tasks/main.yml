@@ -16,7 +16,6 @@
 - import_tasks: software/dev/lazygit.yml
 - import_tasks: software/dev/tmux.yml
 - import_tasks: software/dev/neovim.yml
-- import_tasks: software/dev/xclip.yml
 - import_tasks: software/dev/curlie.yml
 - import_tasks: software/dev/uv.yml
 - import_tasks: software/dev/devops.yml
