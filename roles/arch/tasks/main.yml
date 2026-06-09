@@ -39,7 +39,7 @@
 - import_tasks: software/network/network-tools.yml
 
 #--------------Multimedia packages------------
-- import_tasks: software/multimedia/flameshot.yml
+# - import_tasks: software/multimedia/flameshot.yml
 - import_tasks: software/multimedia/mpv.yml
 - import_tasks: software/multimedia/qbittorrent.yml
 
