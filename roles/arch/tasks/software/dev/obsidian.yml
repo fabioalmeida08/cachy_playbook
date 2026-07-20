@@ -1,0 +1,6 @@
+
+- name: software | obsidian | install package
+  tags: obsidian, packages, workstation-packages
+  package:
+    name: obsidian
+    state: latest

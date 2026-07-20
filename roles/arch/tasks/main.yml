@@ -22,6 +22,7 @@
 - import_tasks: software/dev/tree.yml
 - import_tasks: software/dev/npm.yml
 - import_tasks: software/dev/zoxide.yml
+- import_tasks: software/dev/obsidian.yml
 
 #--------------System packages----------------
 - import_tasks: software/system/intel-grafx.yml
