@@ -1,5 +1,5 @@
 - name: software | wireplumber | install package
-  tags: wireplumber, packages, workstation-packages
+  tags: packages, wireplumber
   package:
     name: "{{ item }}"
     state: latest

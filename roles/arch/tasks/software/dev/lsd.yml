@@ -1,5 +1,5 @@
 - name: software | lsd | install package
-  tags: lsd, packages, workstation-packages
+  tags: lsd, packages
   package:
     name: lsd
     state: latest

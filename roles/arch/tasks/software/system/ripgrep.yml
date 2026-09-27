@@ -1,5 +1,5 @@
 - name: software | ripgrep | install package
-  tags: ripgrep, packages, workstation-packages
+  tags: packages, ripgrep
   package:
     name: ripgrep
     state: latest

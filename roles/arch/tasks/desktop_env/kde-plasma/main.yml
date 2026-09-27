@@ -1,5 +1,5 @@
-- name: desktop env | plasma |
-  tags: desktop env
+- name: desktop | kde-plasma | install packages
+  tags: desktop, kde-plasma
   package:
     name: '{{ item }}'
     state: latest
@@ -7,4 +7,4 @@
     - plasma
     - dolphin
   notify:
-    - set sddm
+    - service | sddm | set

@@ -1,5 +1,5 @@
-- name: software | task | install package
-  tags: task, packages, workstation-packages
+- name: software | taskwarrior | install package
+  tags: taskwarrior, packages
   package:
-    name: task
+    name: taskwarrior
     state: latest

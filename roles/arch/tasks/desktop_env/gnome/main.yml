@@ -1,13 +1,5 @@
-# - name: software | gnome | install package
-#   tags: gnome, packages, workstation-packages
-#   shell:
-#     cmd: pacman -S gnome --noconfirm --overwrite '*'
-#   notify:
-#     - add qt5ct desk env
-#     - enable gdm
-
-- name: desktop env | gnome |
-  tags: desktop env
+- name: desktop | gnome | install packages
+  tags: desktop, gnome
   package:
     name: '{{ item }}'
     state: latest
@@ -35,13 +27,11 @@
     - baobab
     - nautilus
   notify:
-    - add qt5ct desk env
-    - enable gdm
-    - install pacman update indicator
-    - create default xdg dirs
-    - install extension-manager
-#    - install custom extensions
-    - create dir for wallpapers gnome
-    - unzip wallpapers gnome
-#    - enable shell extensions
-    - set shortcuts
+    - config | qt5ct | desktop env
+    - service | gdm | enable
+    - gnome | pacman update indicator | install
+    - xdg | dirs | create
+    - gnome | extension-manager | install
+    - wallpapers | create dir
+    - wallpapers | unzip
+    - gnome | shortcuts | set

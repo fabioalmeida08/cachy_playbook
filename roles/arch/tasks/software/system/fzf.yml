@@ -1,5 +1,5 @@
-- name: software | fuzzy finder | install package
-  tags: fzf, packages, workstation-packages
+- name: software | fzf | install package
+  tags: packages, fzf
   package:
     name: fzf
     state: latest

@@ -10,7 +10,7 @@
 - import_tasks: software/dev/taskwarrior.yml
 - import_tasks: software/dev/yazi.yml
 - import_tasks: software/dev/docker.yml
-- import_tasks: software/dev/docker-c.yml
+- import_tasks: software/dev/docker-compose.yml
 - import_tasks: software/dev/lsd.yml
 - import_tasks: software/dev/oh-my-zsh.yml
 - import_tasks: software/dev/lazygit.yml
@@ -25,7 +25,7 @@
 - import_tasks: software/dev/obsidian.yml
 
 #--------------System packages----------------
-- import_tasks: software/system/intel-grafx.yml
+- import_tasks: software/system/intel-gfx.yml
 - import_tasks: software/system/bashtop.yml
 - import_tasks: software/system/unzip.yml
 - import_tasks: software/system/wireplumber.yml
@@ -34,7 +34,7 @@
 - import_tasks: software/system/ripgrep.yml
 - import_tasks: software/system/rsync.yml
 - import_tasks: software/system/fzf.yml
-- import_tasks: software/system/7zip.yml
+- import_tasks: software/system/sevenzip.yml
 - import_tasks: software/system/flatpak.yml
 - import_tasks: software/system/ufw.yml
 - import_tasks: software/network/network-tools.yml

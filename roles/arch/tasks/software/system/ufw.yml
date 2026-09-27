@@ -1,5 +1,5 @@
 - name: software | ufw | install package
-  tags: ufw, packages, workstation-packages
+  tags: packages, ufw
   package:
     name: '{{ item }}'
     state: latest
@@ -7,5 +7,5 @@
     - ufw
     - gufw
   notify:
-    - enable ufw
-    - start ufw
+    - service | ufw | enable
+    - service | ufw | start

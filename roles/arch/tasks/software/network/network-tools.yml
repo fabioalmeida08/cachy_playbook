@@ -1,4 +1,5 @@
-- name: network-tools
+- name: network | tools | install
+  tags: network
   package:
     name: "{{ item }}"
     state: latest

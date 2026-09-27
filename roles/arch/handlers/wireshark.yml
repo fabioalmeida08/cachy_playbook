@@ -1,5 +1,5 @@
-- name: add user to wireshark group
-  tags: wireshark, group, add user
+- name: group | wireshark | add user
+  tags: group, wireshark
   user:
     name: "{{ user }}"
     groups: wireshark

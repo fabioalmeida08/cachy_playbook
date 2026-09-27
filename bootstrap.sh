@@ -18,7 +18,6 @@ check_requirements () {
 }
 
 run_playbook () {
-    cd cachy_playbook
     time ansible-playbook local.yml -K
 }
 

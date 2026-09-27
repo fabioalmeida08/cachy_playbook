@@ -1,8 +1,9 @@
-- name: dnsmasq
+- name: software | dnsmasq | install package
+  tags: packages, dnsmasq
   package:
     name: dnsmasq
     state: latest
   notify: "{{ item }}"
   loop:
-    - config dns cache
-    - start dnsmasq
+    - config | dns | cache
+    - service | dnsmasq | start

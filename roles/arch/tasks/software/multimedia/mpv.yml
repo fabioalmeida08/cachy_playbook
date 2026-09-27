@@ -1,5 +1,5 @@
 - name: software | mpv | install package
-  tags: mpv, packages, workstation-packages
+  tags: mpv, packages
   package:
     name: mpv
     state: latest

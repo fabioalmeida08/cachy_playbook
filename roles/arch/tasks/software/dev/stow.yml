@@ -1,11 +1,11 @@
 - name: software | stow | install package
-  tags: stow, packages, workstation-packages
+  tags: stow, packages
   package:
     name: stow
     state: latest
   notify: "{{ item }}"
   loop:
-    - set dotfiles
+    - dotfiles | set
 
 - name: Flush handlers
   meta: flush_handlers

@@ -1,5 +1,5 @@
-- name: fonts
-  tags: fonts, meslo
+- name: fonts | install
+  tags: fonts
   package:
     name: "{{ item }}"
     state: latest
@@ -13,4 +13,4 @@
     - adobe-source-han-sans-cn-fonts
     - adobe-source-han-sans-kr-fonts
     - noto-fonts-emoji
-  notify: locales config
+  notify: config | locales

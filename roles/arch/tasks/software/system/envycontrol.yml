@@ -1,5 +1,5 @@
-- name: software | nvidia-optimus | install package
+- name: software | envycontrol | install package
+  tags: packages, envycontrol
   become_user: "{{ user }}"
-  tags: nvidia , drivers
   shell:
     cmd: yay -S envycontrol --noconfirm

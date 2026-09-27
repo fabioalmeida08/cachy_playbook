@@ -1,5 +1,5 @@
-- name: desktop env | xfce4
-  tags: desktop env
+- name: desktop | xfce | install packages
+  tags: desktop, xfce
   package:
     name: '{{ item }}'
     state: latest
@@ -15,9 +15,9 @@
     - xdotool
     - redshift
   notify:
-    - enable lightdm
-    - create default xdg dirs
-    - config lightdm-greeter
-    - config lightdm-gtk-greeter
-    - extract wallpapers
-    - set xfce4 dotfiles
+    - service | lightdm | enable
+    - xdg | dirs | create
+    - config | lightdm | greeter
+    - config | lightdm | gtk greeter
+    - wallpapers | extract
+    - dotfiles | xfce4 | set

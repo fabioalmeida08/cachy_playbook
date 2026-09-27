@@ -1,5 +1,5 @@
 - name: software | lutris | install package
-  tags: lutris, packages, workstation-packages
+  tags: lutris, packages
   package:
     name: "{{ item }}"
     state: latest

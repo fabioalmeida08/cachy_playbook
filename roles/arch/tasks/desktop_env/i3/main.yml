@@ -1,5 +1,5 @@
-- name: desktop env | i3wm
-  tags: desktop env
+- name: desktop | i3 | install packages
+  tags: desktop, i3
   package:
     name: '{{ item }}'
     state: latest
@@ -35,15 +35,14 @@
     - evince
     - brightnessctl
   notify:
-    - enable lightdm
-    - create default xdg dirs
-    - config lightdm-greeter
-    - config lightdm-gtk-greeter
-    - add qt5ct desk env
-    - set dotfiles
-    - extract wallpapers
-    - set lightdm-gtk-greeter wallpaper
-    - config lid to block
-    - config lid to lock when docked
-    - config idle action to ignore
-
+    - service | lightdm | enable
+    - xdg | dirs | create
+    - config | lightdm | greeter
+    - config | lightdm | gtk greeter
+    - config | qt5ct | desktop env
+    - dotfiles | set
+    - wallpapers | extract
+    - config | lightdm | wallpaper
+    - config | lid | block
+    - config | lid | lock when docked
+    - config | idle action | ignore

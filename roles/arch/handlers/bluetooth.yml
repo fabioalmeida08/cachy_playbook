@@ -1,5 +1,5 @@
-- name: enable bluetooth
-  tags: bluetooth, service
+- name: service | bluetooth | enable
+  tags: service, bluetooth
   service:
     name: bluetooth
     enabled: yes

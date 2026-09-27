@@ -1,4 +1,4 @@
-- name: set defautl dark theme
-  tags: niri
+- name: config | niri | dark theme
+  tags: config, niri
   become_user: "{{ user }}"
   shell: sh -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark"

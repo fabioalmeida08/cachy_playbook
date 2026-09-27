@@ -1,5 +1,5 @@
-- name: desktop env | hyprland
-  tags: desktop env
+- name: desktop | hyprland | install packages
+  tags: desktop, hyprland
   package:
     name: '{{ item }}'
     state: latest
@@ -24,8 +24,8 @@
     - xdg-desktop-portal-hyprland
     - thunar
   notify:
-    - enable lightdm
-    - create default xdg dirs
-    - config lightdm-greeter
-    - config lightdm-gtk-greeter
-    - extract wallpapers
+    - service | lightdm | enable
+    - xdg | dirs | create
+    - config | lightdm | greeter
+    - config | lightdm | gtk greeter
+    - wallpapers | extract

@@ -1,4 +1,5 @@
-- name: drivers |  bluetooth
+- name: drivers | bluetooth | install
+  tags: drivers, bluetooth
   package:
     name: "{{ item }}"
     state: latest
@@ -6,4 +7,4 @@
     - bluez
     - bluez-utils
     - bluetui
-  notify: enable bluetooth
+  notify: service | bluetooth | enable

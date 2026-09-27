@@ -1,4 +1,5 @@
-- name: create the dir for eg-proton
+- name: steam | eg-proton | create dir
+  tags: steam, eg-proton
   file:
     path: '{{ home }}/.local/share/Steam/compatibilitytools.d'
     owner: '{{ user }}'
@@ -6,7 +7,8 @@
     state: directory
     mode: '0764'
 
-- name: get proton-ge latest tag
+- name: steam | proton-ge | get latest tag
+  tags: steam, proton-ge
   uri:
     url: 'https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest'
     return_content: yes
@@ -14,7 +16,8 @@
       Accept: 'application/vnd.github.v3+json'
   register: release_info
 
-- name: install proton ge
+- name: steam | proton-ge | install
+  tags: steam, proton-ge
   unarchive:
     src: 'https://github.com/GloriousEggroll/proton-ge-custom/archive/{{ release_info.json.tag_name }}.tar.gz'
     dest: '{{ home }}/.local/share/Steam/compatibilitytools.d'
@@ -23,7 +26,7 @@
     group: '{{ user }}'
     mode: '0755'
 
-- name: install mangohud
+- name: steam | mangohud | install
   tags: steam, mangohud
   package:
     name: '{{ item }}'
@@ -32,7 +35,8 @@
     - mangohud
     - lib32-mangohud
 
-- name: add mangohud on system env
+- name: config | mangohud | system env
+  tags: config, mangohud
   lineinfile:
     path: '/etc/environment'
     line: MANGOHUD=1

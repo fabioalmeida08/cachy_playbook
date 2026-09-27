@@ -1,5 +1,5 @@
 - name: software | zsh | install package
-  tags: zsh, packages, workstation-packages
+  tags: zsh, packages
   package:
     name: zsh
     state: latest

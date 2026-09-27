@@ -1,11 +1,11 @@
-- name: Retrieve Dotfiles
-  tags: git, dotfiles, config
+- name: dotfiles | retrieve
+  tags: dotfiles
   git:
     repo: "https://github.com/fabioalmeida08/dotfiles"
     dest: "{{ home }}/.dotfiles"
 
-- name: Place dotfiles on right dirs
-  tags: git, dotfiles, config
+- name: dotfiles | place
+  tags: dotfiles
   copy:
     src: "{{ home }}/.dotfiles/{{ item.file_name }}"
     dest: "{{ item.dest }}"
@@ -27,7 +27,6 @@
     - { file_name: "mpv", dest: "{{ home }}/.config"}
     - { file_name: "MangoHud", dest: "{{ home }}/.config"}
   notify:
-    - setup git config
-    - set window title shortcut
-    - set mangohud output
-
+    - config | git | setup
+    - config | window title | shortcut
+    - config | mangohud | output

@@ -1,5 +1,5 @@
-- name: software | devops-tools | install package
-  tags: aws, packages, workstation-packages
+- name: software | devops | install package
+  tags: devops, packages
   package:
     name: "{{ item }}"
     state: latest

@@ -1,5 +1,5 @@
 - name: software | bashtop | install package
-  tags: bashtop, packages, workstation-packages
+  tags: packages, bashtop
   package:
     name: btop
     state: latest

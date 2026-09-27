@@ -1,5 +1,5 @@
 - name: software | flatpak | install package
-  tags: flatpak, packages, workstation-packages
+  tags: packages, flatpak
   package:
     name: flatpak
     state: latest

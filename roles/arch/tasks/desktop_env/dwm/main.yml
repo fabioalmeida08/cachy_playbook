@@ -1,5 +1,5 @@
-- name: desktop env | bspwm |
-  tags: desktop env
+- name: desktop | dwm | install packages
+  tags: desktop, dwm
   package:
     name: "{{ item }}"
     state: latest
@@ -17,16 +17,16 @@
     - gnome-themes-extra
     - xdg-user-dirs
   notify:
-    - add qt5ct desk env
-    - enable lightdm
-    - config lightdm-greeter
-    - config lightdm-gtk-greeter
-    - create default xdg dirs
-    - create dir for wallpapers
-    - unzip wallpapers
+    - config | qt5ct | desktop env
+    - service | lightdm | enable
+    - config | lightdm | greeter
+    - config | lightdm | gtk greeter
+    - xdg | dirs | create
+    - wallpapers | create dir
+    - wallpapers | unzip
 
-- name: software | dwm | install package
+- name: packages | dwm | install
   become_user: "{{ user }}"
-  tags: dwm, packages, workstation-packages
+  tags: packages, dwm
   shell:
     cmd: yay -S dwm --noconfirm

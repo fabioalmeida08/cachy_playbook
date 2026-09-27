@@ -1,18 +1,19 @@
-- name: start prometheus service
-  tags: prometheus, service
+- name: service | prometheus | start
+  tags: service, prometheus
   service:
     name: prometheus
     state: started
     enabled: yes
 
-- name: start prometheus-node-exporter service
-  tags: prometheus-node-exporter, service
+- name: service | prometheus-node-exporter | start
+  tags: service, prometheus-node-exporter
   service:
     name: prometheus-node-exporter
     state: started
     enabled: yes
 
-- name: dynamic set ip in server prometheus.yml
+- name: config | prometheus | set ip
+  tags: config, prometheus
   lineinfile:
     path: /etc/prometheus/prometheus.yml
     regexp: "{{ item.regex }}"

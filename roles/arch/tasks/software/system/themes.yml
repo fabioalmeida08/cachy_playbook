@@ -1,5 +1,5 @@
-- name: software | qtct | install package
-  tags: qtct, packages, workstation-packages
+- name: software | themes | install package
+  tags: packages, themes
   package:
     name: "{{ item }}"
     state: latest

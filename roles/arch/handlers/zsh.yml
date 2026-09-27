@@ -1,28 +1,28 @@
-- name: install powerlevel10k theme
-  tags: powerlevel10k, theme, zsh
+- name: zsh | powerlevel10k | install theme
+  tags: zsh, powerlevel10k
   git:
     repo: https://github.com/romkatv/powerlevel10k.git
     dest: "{{ home }}/.oh-my-zsh/custom/themes/powerlevel10k"
   notify: "{{ item }}"
   loop:
-    - source custom p10k config
-    - set login shell to zsh
+    - zsh | p10k | source config
+    - zsh | login shell | set
 
-- name: set powerlevel10k for zsh theme
-  tags: powerlevel10k, theme, zsh
+- name: zsh | powerlevel10k | set theme
+  tags: zsh, powerlevel10k
   lineinfile:
     path: "{{ home }}/.zshrc"
     regexp: "^ZSH_THEME="
     line: ZSH_THEME="powerlevel10k/powerlevel10k"
 
-- name: source custom p10k config
-  tags: powerlevel10k, theme, zsh
+- name: zsh | p10k | source config
+  tags: zsh, p10k
   lineinfile:
     path: "{{ home }}/.zshrc"
     line: source ~/.p10k.zsh
 
-- name: set aliases
-  tags: aliases, zsh
+- name: zsh | aliases | set
+  tags: zsh, aliases
   lineinfile:
     path: "{{ home }}/.zshrc"
     line: |
@@ -62,6 +62,6 @@
       alias yof="yup ; pof"
 #      source /usr/share/bash-completion/completions/aws
 
-- name: set login shell to zsh
+- name: zsh | login shell | set
   ansible.builtin.command: usermod --shell /bin/zsh {{ user }}
   become: true

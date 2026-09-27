@@ -5,7 +5,7 @@
     distro: "{{ ansible_facts['distribution'] }}"
 
   pre_tasks:
-    - name: pre-run | check requirements
+    - name: config | pre-run | check requirements
       tags: always
       package:
         name: "{{ item }}"
@@ -15,7 +15,7 @@
         - python-pip
         - python-setuptools
 
-    - name: Enable Multilib
+    - name: config | multilib | enable
       replace:
         path: "/etc/pacman.conf"
         regexp: '#\[multilib]\n#Include = \/etc\/pacman.d\/mirrorlist'
@@ -24,7 +24,7 @@
           Include = /etc/pacman.d/mirrorlist
       when: distro == 'Archlinux'
 
-    - name: pacman -Syu
+    - name: system | pacman | update
       pacman:
         update_cache: true
         upgrade: true

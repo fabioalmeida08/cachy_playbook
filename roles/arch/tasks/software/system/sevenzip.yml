@@ -1,0 +1,5 @@
+- name: software | sevenzip | install package
+  tags: packages, sevenzip
+  package:
+    name: 7zip
+    state: latest

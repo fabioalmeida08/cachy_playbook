@@ -1,4 +1,5 @@
-- name: drivers | install GPU drivers
+- name: drivers | gpu | install
+  tags: drivers, gpu
   package:
     name: "{{ item }}"
     state: latest

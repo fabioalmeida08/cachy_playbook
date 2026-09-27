@@ -1,5 +1,5 @@
 - name: software | yazi | install package
-  tags: yazi, packages, workstation-packages
+  tags: yazi, packages
   package:
     name: "{{ item }}"
     state: latest

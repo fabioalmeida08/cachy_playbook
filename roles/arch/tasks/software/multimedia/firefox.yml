@@ -1,5 +1,5 @@
 - name: software | firefox | install package
-  tags: firefox, packages, workstation-packages
+  tags: firefox, packages
   package:
     name: firefox
     state: latest

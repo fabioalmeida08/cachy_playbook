@@ -1,6 +1,5 @@
-
 - name: software | zoxide | install package
-  tags: zoxide , packages, workstation-packages
+  tags: zoxide, packages
   package:
     name: zoxide
     state: latest
