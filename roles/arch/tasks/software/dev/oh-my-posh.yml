@@ -1,0 +1,31 @@
+# Oh My Posh - https://ohmyposh.dev/docs/installation/linux
+# 1. The official install script needs curl, unzip, realpath and dirname
+- name: software | oh-my-posh | dependencies
+  tags:
+    - oh-my-posh
+    - packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - curl
+    - unzip
+
+# 2. Installation directory (the script errors out if it doesn't exist)
+- name: config | oh-my-posh | create
+  tags:
+    - oh-my-posh
+    - config
+  file:
+    path: "{{ home }}/.local/bin"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+
+# 3. Run the official script, pinned to ~/.local/bin (already on $PATH via .zshrc)
+- name: software | oh-my-posh | install
+  tags:
+    - oh-my-posh
+    - packages
+  become_user: "{{ user }}"
+  shell: "curl -fsSL https://ohmyposh.dev/install.sh | bash -s -- -d {{ home }}/.local/bin"

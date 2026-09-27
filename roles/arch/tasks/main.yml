@@ -13,6 +13,7 @@
 - import_tasks: software/dev/docker-compose.yml
 - import_tasks: software/dev/lsd.yml
 - import_tasks: software/dev/oh-my-zsh.yml
+- import_tasks: software/dev/oh-my-posh.yml
 - import_tasks: software/dev/lazygit.yml
 - import_tasks: software/dev/tmux.yml
 - import_tasks: software/dev/neovim.yml
