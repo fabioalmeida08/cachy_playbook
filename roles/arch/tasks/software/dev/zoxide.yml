@@ -1,5 +1,7 @@
-- name: software | zoxide | install package
-  tags: zoxide, packages
+- name: software | zoxide | install
+  tags:
+    - zoxide
+    - packages
   package:
     name: zoxide
     state: latest

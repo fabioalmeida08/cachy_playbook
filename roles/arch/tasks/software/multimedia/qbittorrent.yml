@@ -1,5 +1,7 @@
-- name: software | qbittorrent | install package
-  tags: qbittorrent, packages
+- name: software | qbittorrent | install
+  tags:
+    - qbittorrent
+    - packages
   package:
     name: qbittorrent
     state: latest

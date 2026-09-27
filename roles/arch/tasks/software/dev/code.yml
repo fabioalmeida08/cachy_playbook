@@ -1,6 +1,8 @@
-- name: software | vscode | install package
+- name: software | vscode | install
   become_user: "{{ user }}"
-  tags: vscode, packages
+  tags:
+    - vscode
+    - packages
   shell:
     cmd: yay -S visual-studio-code-bin --noconfirm
 

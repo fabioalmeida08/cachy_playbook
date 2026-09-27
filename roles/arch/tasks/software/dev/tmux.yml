@@ -1,5 +1,8 @@
-- name: software | tmux | install package
-  tags: tmux, packages
+# Terminal multiplexer
+- name: software | tmux | install
+  tags:
+    - tmux
+    - packages
   package:
     name: tmux
     state: latest

@@ -1,5 +1,8 @@
+# NVIDIA graphics drivers
 - name: drivers | nvidia | install
-  tags: drivers, nvidia
+  tags:
+    - drivers
+    - nvidia
   package:
     name: "{{ item }}"
     state: latest

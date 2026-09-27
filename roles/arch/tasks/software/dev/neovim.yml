@@ -1,5 +1,8 @@
-- name: software | neovim | install package
-  tags: neovim, packages
+# Neovim text editor
+- name: software | neovim | install
+  tags:
+    - neovim
+    - packages
   package:
     name: '{{ item }}'
     state: latest

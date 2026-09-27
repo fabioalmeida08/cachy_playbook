@@ -1,5 +1,7 @@
-- name: software | xclip | install package
-  tags: xclip, packages
+- name: software | xclip | install
+  tags:
+    - xclip
+    - packages
   package:
     name: xclip
     state: latest

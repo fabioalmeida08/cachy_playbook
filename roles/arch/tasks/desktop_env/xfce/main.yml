@@ -1,5 +1,7 @@
-- name: desktop | xfce | install packages
-  tags: desktop, xfce
+- name: desktop | xfce | install
+  tags:
+    - desktop
+    - xfce
   package:
     name: '{{ item }}'
     state: latest

@@ -1,5 +1,7 @@
 - name: config | multilib | enable
-  tags: config, multilib
+  tags:
+    - config
+    - multilib
   replace:
     path: "/etc/pacman.conf"
     regexp: '#\[multilib]\n#Include = \/etc\/pacman.d\/mirrorlist'

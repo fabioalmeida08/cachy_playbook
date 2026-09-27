@@ -1,5 +1,6 @@
-- name: yay | repository | remove
-  tags: yay
+- name: config | yay | remove
+  tags:
+    - yay
   file:
     path: "{{ home }}/yay"
     state: absent

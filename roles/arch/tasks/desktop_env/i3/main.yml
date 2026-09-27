@@ -1,5 +1,7 @@
-- name: desktop | i3 | install packages
-  tags: desktop, i3
+- name: desktop | i3 | install
+  tags:
+    - desktop
+    - i3
   package:
     name: '{{ item }}'
     state: latest

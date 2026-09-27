@@ -1,5 +1,8 @@
-- name: software | git | install package
-  tags: git, packages
+# Git version control system
+- name: software | git | install
+  tags:
+    - git
+    - packages
   package:
     name: git
     state: latest

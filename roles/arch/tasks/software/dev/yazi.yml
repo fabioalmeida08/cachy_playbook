@@ -1,5 +1,7 @@
-- name: software | yazi | install package
-  tags: yazi, packages
+- name: software | yazi | install
+  tags:
+    - yazi
+    - packages
   package:
     name: "{{ item }}"
     state: latest

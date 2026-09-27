@@ -1,5 +1,7 @@
-- name: desktop | bspwm | install packages
-  tags: desktop, bspwm
+- name: desktop | bspwm | install
+  tags:
+    - desktop
+    - bspwm
   package:
     name: "{{ item }}"
     state: latest

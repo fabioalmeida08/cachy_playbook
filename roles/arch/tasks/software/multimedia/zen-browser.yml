@@ -1,5 +1,7 @@
-- name: software | zen-browser | install package
+- name: software | zen-browser | install
   become_user: "{{ user }}"
-  tags: zen-browser, packages
+  tags:
+    - zen-browser
+    - packages
   shell:
     cmd: yay -S zen-browser-bin --noconfirm

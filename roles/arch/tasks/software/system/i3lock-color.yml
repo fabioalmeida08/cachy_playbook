@@ -1,5 +1,7 @@
-- name: software | i3lock-color | install package
-  tags: packages, i3lock-color
+- name: software | i3lock-color | install
+  tags:
+    - packages
+    - i3lock-color
   become_user: "{{ user }}"
   shell:
     cmd: yay -S i3lock-color --noconfirm

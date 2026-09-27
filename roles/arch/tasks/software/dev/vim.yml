@@ -1,5 +1,7 @@
-- name: software | vim | install package
-  tags: vim, packages
+- name: software | vim | install
+  tags:
+    - vim
+    - packages
   package:
     name: '{{ item }}'
     state: latest

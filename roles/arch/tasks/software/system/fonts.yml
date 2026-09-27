@@ -1,5 +1,7 @@
+# System fonts
 - name: fonts | install
-  tags: fonts
+  tags:
+    - fonts
   package:
     name: "{{ item }}"
     state: latest

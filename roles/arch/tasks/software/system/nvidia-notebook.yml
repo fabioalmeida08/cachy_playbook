@@ -1,5 +1,7 @@
-- name: software | nvidia-legacy | install package
-  tags: drivers, nvidia-legacy
+- name: software | nvidia-legacy | install
+  tags:
+    - drivers
+    - nvidia-legacy
   become_user: "{{ user }}"
   shell:
     cmd: yay -S nvidia-390xx-dkms nvidia-390xx-utils nvidia-390xx-settings envycontrol --noconfirm

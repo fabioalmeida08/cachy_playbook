@@ -1,5 +1,7 @@
-- name: software | ssh | install package
-  tags: ssh, packages
+- name: software | ssh | install
+  tags:
+    - ssh
+    - packages
   package:
     name: openssh
     state: latest

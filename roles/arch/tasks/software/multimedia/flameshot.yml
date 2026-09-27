@@ -1,5 +1,7 @@
-- name: software | flameshot | install package
-  tags: flameshot, packages
+- name: software | flameshot | install
+  tags:
+    - flameshot
+    - packages
   package:
     name: flameshot
     state: latest

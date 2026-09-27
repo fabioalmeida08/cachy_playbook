@@ -1,5 +1,7 @@
-- name: software | prometheus | install package
-  tags: prometheus, packages
+- name: software | prometheus | install
+  tags:
+    - prometheus
+    - packages
   package:
     name: prometheus
     state: latest

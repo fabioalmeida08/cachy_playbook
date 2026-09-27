@@ -1,5 +1,7 @@
-- name: software | brave | install package
+- name: software | brave | install
   become_user: "{{ user }}"
-  tags: brave, packages
+  tags:
+    - brave
+    - packages
   shell:
     cmd: yay -S brave-bin --noconfirm

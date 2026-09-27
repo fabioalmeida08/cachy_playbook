@@ -1,5 +1,7 @@
-- name: software | gamemode | install package
-  tags: gamemode, packages
+- name: software | gamemode | install
+  tags:
+    - gamemode
+    - packages
   package:
     name: '{{ item }}'
     state: latest

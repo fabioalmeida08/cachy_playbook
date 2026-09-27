@@ -1,5 +1,8 @@
-- name: software | zsh | install package
-  tags: zsh, packages
+# Zsh shell
+- name: software | zsh | install
+  tags:
+    - zsh
+    - packages
   package:
     name: zsh
     state: latest

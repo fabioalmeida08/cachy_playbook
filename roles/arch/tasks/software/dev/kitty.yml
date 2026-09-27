@@ -1,5 +1,7 @@
-- name: software | kitty | install package
-  tags: kitty, packages
+- name: software | kitty | install
+  tags:
+    - kitty
+    - packages
   package:
     name: kitty
     state: latest

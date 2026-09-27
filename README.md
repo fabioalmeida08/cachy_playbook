@@ -67,6 +67,36 @@ cachy_playbook/
 └── bootstrap.sh             # Bootstrap script
 ```
 
+## Naming Convention
+
+All tasks follow the format: `category | component | action`
+
+**Categories:**
+- `software` - Package installation/removal
+- `service` - Service management
+- `config` - File/system configuration
+- `desktop` - Desktop environment
+- `fonts` - Font management
+- `group` - Group management
+- `drivers` - Driver installation
+- `network` - Network tools
+
+**Actions:**
+- `install` - Install package
+- `remove` - Remove package
+- `enable` - Enable service
+- `disable` - Disable service
+- `start` - Start service
+- `stop` - Stop service
+- `restart` - Restart service
+- `configure` - Configure
+- `generate` - Generate
+- `add` - Add
+- `create` - Create
+- `set` - Set
+- `build` - Build
+- `clone` - Clone
+
 ## Tags
 
 | Tag | Description |

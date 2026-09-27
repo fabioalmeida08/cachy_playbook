@@ -1,5 +1,7 @@
-- name: software | stow | install package
-  tags: stow, packages
+- name: software | stow | install
+  tags:
+    - stow
+    - packages
   package:
     name: stow
     state: latest

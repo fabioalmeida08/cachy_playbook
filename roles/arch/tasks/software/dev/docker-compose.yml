@@ -1,5 +1,7 @@
-- name: software | docker-compose | install package
-  tags: docker-compose, packages
+- name: software | docker-compose | install
+  tags:
+    - docker-compose
+    - packages
   package:
     name: docker-compose
     state: latest

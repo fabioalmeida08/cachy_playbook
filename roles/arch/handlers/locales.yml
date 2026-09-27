@@ -1,5 +1,6 @@
-- name: config | locales
-  tags: locales
+- name: config | locales | generate
+  tags:
+    - locales
   lineinfile:
     path: "/etc/locale.gen"
     regexp: "{{ item.regexp }}"
@@ -10,9 +11,10 @@
     - { regexp: "^#ko_KR.UTF-8", line: "ko_KR.UTF-8 UTF-8" }
     - { regexp: "^#ja_JP.UTF-8", line: "ja_JP.UTF-8 UTF-8" }
     - { regexp: "^#pt_BR.UTF-8", line: "pt_BR.UTF-8 UTF-8" }
-  notify: locales | generate
+  notify: config | locales | generate
 
-- name: locales | generate
-  tags: locales
+- name: config | locales | generate
+  tags:
+    - locales
   shell:
     cmd: locale-gen

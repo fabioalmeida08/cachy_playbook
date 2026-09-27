@@ -1,23 +1,31 @@
 - name: service | gdm | enable
-  tags: service, gdm
+  tags:
+    - service
+    - gdm
   service:
     name: gdm
     enabled: yes
 
-- name: gnome | pacman update indicator | install
-  tags: gnome, packages
+- name: desktop | gnome | pacman indicator
+  tags:
+    - gnome
+    - packages
   become_user: '{{ user }}'
   shell:
     cmd: yay -S gnome-shell-extension-arch-update --noconfirm
 
-- name: gnome | extensions | install
-  tags: gnome, packages
+- name: desktop | gnome | extensions install
+  tags:
+    - gnome
+    - packages
   become_user: '{{ user }}'
   shell:
     cmd: yay -S gnome-shell-extension-blur-my-shell bibata-cursor-theme gnome-shell-extension-clipboard-history --noconfirm
 
-- name: gnome | extensions | enable
-  tags: gnome, extensions
+- name: desktop | gnome | extensions enable
+  tags:
+    - gnome
+    - extensions
   become_user: '{{ user }}'
   shell: 'gnome-extensions enable {{ item }}'
   loop:
@@ -26,22 +34,28 @@
     - arch-update@RaphaelRochet
     - clipboard-history@alexsaveau.dev
 
-- name: gnome | shortcuts | set
-  tags: gnome, shortcuts
+- name: desktop | gnome | shortcuts
+  tags:
+    - gnome
+    - shortcuts
   become_user: '{{ user }}'
   shell:
     cmd: 'dconf load / < {{ home }}/.config/dconf/settings.dconf'
 
 - name: config | mangohud | output
-  tags: config, mangohud
+  tags:
+    - config
+    - mangohud
   lineinfile:
     path: '{{ home }}/.config/MangoHud/MangoHud.conf'
     regexp: '^output_folder='
     line: 'output_folder={{ home }}'
 
 
-- name: gnome | extension-manager | install
-  tags: gnome, packages
+- name: desktop | gnome | extension-manager
+  tags:
+    - gnome
+    - packages
   become_user: "{{ user }}"
   shell:
     cmd: yay -S extension-manager --noconfirm

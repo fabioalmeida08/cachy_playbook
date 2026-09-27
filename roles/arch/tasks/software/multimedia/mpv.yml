@@ -1,5 +1,7 @@
-- name: software | mpv | install package
-  tags: mpv, packages
+- name: software | mpv | install
+  tags:
+    - mpv
+    - packages
   package:
     name: mpv
     state: latest

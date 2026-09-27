@@ -1,5 +1,7 @@
-- name: software | themes | install package
-  tags: packages, themes
+- name: software | themes | install
+  tags:
+    - packages
+    - themes
   package:
     name: "{{ item }}"
     state: latest
@@ -13,6 +15,8 @@
 
 # - name: software | adwaita-theme | install package
 #   become_user: "{{ user }}"
-#   tags: adwaita themes, packages, themes
+#   tags:
+    - adwaita themes
+    - packages, themes
 #   shell:
 #     cmd: yay -S adwaita-qt5-git adwaita-qt6-git bibata-cursor-theme --noconfirm

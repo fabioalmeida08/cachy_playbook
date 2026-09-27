@@ -1,18 +1,25 @@
+# Docker service handlers
 - name: group | docker | create
-  tags: group, docker
+  tags:
+    - group
+    - docker
   group:
     name: docker
     state: present
 
 - name: group | docker | add user
-  tags: group, docker
+  tags:
+    - group
+    - docker
   user:
     name: "{{ user }}"
     groups: docker
     append: yes
 
 - name: service | docker | start
-  tags: service, docker
+  tags:
+    - service
+    - docker
   service:
     name: docker
     state: started

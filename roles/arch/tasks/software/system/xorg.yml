@@ -1,5 +1,7 @@
-- name: software | xorg | install package
-  tags: packages, xorg
+- name: software | xorg | install
+  tags:
+    - packages
+    - xorg
   package:
     name: xorg
     state: latest

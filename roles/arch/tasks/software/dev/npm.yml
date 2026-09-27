@@ -1,5 +1,7 @@
-- name: software | npm | install package
-  tags: npm, packages
+- name: software | npm | install
+  tags:
+    - npm
+    - packages
   package:
     name: npm
     state: latest

@@ -1,5 +1,7 @@
-- name: software | bash-completion | install package
-  tags: bash-completion, packages
+- name: software | bash-completion | install
+  tags:
+    - bash-completion
+    - packages
   package:
     name: bash-completion
     state: latest

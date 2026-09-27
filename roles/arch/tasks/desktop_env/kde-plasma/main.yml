@@ -1,5 +1,7 @@
-- name: desktop | kde-plasma | install packages
-  tags: desktop, kde-plasma
+- name: desktop | kde-plasma | install
+  tags:
+    - desktop
+    - kde-plasma
   package:
     name: '{{ item }}'
     state: latest

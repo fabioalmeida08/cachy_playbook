@@ -1,5 +1,7 @@
-- name: software | curlie | install package
-  tags: curlie, packages
+- name: software | curlie | install
+  tags:
+    - curlie
+    - packages
   package:
     name: curlie
     state: latest

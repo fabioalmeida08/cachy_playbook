@@ -1,5 +1,7 @@
-- name: desktop | hyprland | install packages
-  tags: desktop, hyprland
+- name: desktop | hyprland | install
+  tags:
+    - desktop
+    - hyprland
   package:
     name: '{{ item }}'
     state: latest

@@ -1,5 +1,7 @@
-- name: software | ufw | install package
-  tags: packages, ufw
+- name: software | ufw | install
+  tags:
+    - packages
+    - ufw
   package:
     name: '{{ item }}'
     state: latest

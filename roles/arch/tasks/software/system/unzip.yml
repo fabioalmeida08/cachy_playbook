@@ -1,5 +1,7 @@
-- name: software | unzip | install package
-  tags: packages, unzip
+- name: software | unzip | install
+  tags:
+    - packages
+    - unzip
   package:
     name: unzip
     state: latest

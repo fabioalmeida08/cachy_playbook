@@ -1,5 +1,7 @@
-- name: software | flatpak | install package
-  tags: packages, flatpak
+- name: software | flatpak | install
+  tags:
+    - packages
+    - flatpak
   package:
     name: flatpak
     state: latest

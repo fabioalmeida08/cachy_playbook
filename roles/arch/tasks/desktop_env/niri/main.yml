@@ -1,5 +1,5 @@
 # 1. Install packages
-- name: desktop | niri | install packages
+- name: desktop | niri | install
   tags:
     - desktop
     - niri
@@ -16,7 +16,9 @@
 
 # 2. Remove SDDM
 - name: service | sddm | disable
-  tags: sddm, service
+  tags:
+    - sddm
+    - service
   become: true
   shell: |
     if systemctl is-enabled --quiet sddm 2>/dev/null; then
@@ -24,7 +26,9 @@
     fi
 
 - name: software | sddm | remove
-  tags: sddm, packages
+  tags:
+    - sddm
+    - packages
   become: true
   shell: |
     if pacman -Qs sddm > /dev/null; then
@@ -33,7 +37,9 @@
 
 # 3. Enable Ly
 - name: service | ly | enable
-  tags: service, ly
+  tags:
+    - service
+    - ly
   become: true
   shell: |
     systemctl enable ly@tty1.service

@@ -1,5 +1,8 @@
+# Bluetooth drivers and utilities
 - name: drivers | bluetooth | install
-  tags: drivers, bluetooth
+  tags:
+    - drivers
+    - bluetooth
   package:
     name: "{{ item }}"
     state: latest

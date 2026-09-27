@@ -1,5 +1,7 @@
-- name: software | prometheus-node-exporter | install package
-  tags: prometheus-node-exporter, packages
+- name: software | prometheus-node-exporter | install
+  tags:
+    - prometheus-node-exporter
+    - packages
   package:
     name: prometheus-node-exporter
     state: latest

@@ -1,5 +1,7 @@
 - name: service | sddm | disable
-  tags: service, sddm
+  tags:
+    - service
+    - sddm
   become: true
   shell: |
     if systemctl is-enabled --quiet sddm 2>/dev/null; then
@@ -7,7 +9,9 @@
     fi
 
 - name: software | sddm | remove
-  tags: packages, sddm
+  tags:
+    - packages
+    - sddm
   become: true
   shell: |
     if pacman -Qs sddm > /dev/null; then
@@ -15,12 +19,16 @@
     fi
 
 - name: software | ly | install
-  tags: packages, ly
+  tags:
+    - packages
+    - ly
   become: true
   shell: pacman -S --needed --noconfirm ly
 
 - name: service | ly | enable
-  tags: service, ly
+  tags:
+    - service
+    - ly
   become: true
   shell: |
     systemctl enable ly@tty1.service

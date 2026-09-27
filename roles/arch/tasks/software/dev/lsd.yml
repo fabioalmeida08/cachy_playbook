@@ -1,5 +1,7 @@
-- name: software | lsd | install package
-  tags: lsd, packages
+- name: software | lsd | install
+  tags:
+    - lsd
+    - packages
   package:
     name: lsd
     state: latest

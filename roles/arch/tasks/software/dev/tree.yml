@@ -1,5 +1,7 @@
-- name: software | tree | install package
-  tags: tree, packages
+- name: software | tree | install
+  tags:
+    - tree
+    - packages
   package:
     name: tree
     state: latest

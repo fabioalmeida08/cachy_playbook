@@ -1,5 +1,7 @@
-- name: software | bat | install package
-  tags: bat, packages
+- name: software | bat | install
+  tags:
+    - bat
+    - packages
   package:
     name: bat
     state: latest

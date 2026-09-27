@@ -1,5 +1,7 @@
-- name: software | fzf | install package
-  tags: packages, fzf
+- name: software | fzf | install
+  tags:
+    - packages
+    - fzf
   package:
     name: fzf
     state: latest

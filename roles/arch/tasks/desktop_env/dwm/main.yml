@@ -1,5 +1,7 @@
-- name: desktop | dwm | install packages
-  tags: desktop, dwm
+- name: desktop | dwm | install
+  tags:
+    - desktop
+    - dwm
   package:
     name: "{{ item }}"
     state: latest
@@ -25,8 +27,10 @@
     - wallpapers | create dir
     - wallpapers | unzip
 
-- name: packages | dwm | install
+- name: desktop | dwm | install
   become_user: "{{ user }}"
-  tags: packages, dwm
+  tags:
+    - packages
+    - dwm
   shell:
     cmd: yay -S dwm --noconfirm

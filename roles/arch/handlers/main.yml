@@ -1,3 +1,4 @@
+# Main handlers file - imports all other handler files
 - import_tasks: config.yml
 - import_tasks: zsh.yml
 - import_tasks: steam.yml

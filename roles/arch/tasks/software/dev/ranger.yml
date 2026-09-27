@@ -1,5 +1,7 @@
-- name: software | ranger | install package
-  tags: ranger, packages
+- name: software | ranger | install
+  tags:
+    - ranger
+    - packages
   package:
     name: "{{ item }}"
     state: latest

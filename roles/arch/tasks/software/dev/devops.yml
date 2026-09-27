@@ -1,5 +1,7 @@
-- name: software | devops | install package
-  tags: devops, packages
+- name: software | devops | install
+  tags:
+    - devops
+    - packages
   package:
     name: "{{ item }}"
     state: latest

@@ -1,5 +1,7 @@
-- name: software | rsync | install package
-  tags: packages, rsync
+- name: software | rsync | install
+  tags:
+    - packages
+    - rsync
   package:
     name: rsync
     state: latest

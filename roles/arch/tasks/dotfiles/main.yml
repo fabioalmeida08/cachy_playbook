@@ -1,11 +1,13 @@
 - name: dotfiles | retrieve
-  tags: dotfiles
+  tags:
+    - dotfiles
   git:
     repo: "https://github.com/fabioalmeida08/dotfiles"
     dest: "{{ home }}/.dotfiles"
 
 - name: dotfiles | place
-  tags: dotfiles
+  tags:
+    - dotfiles
   copy:
     src: "{{ home }}/.dotfiles/{{ item.file_name }}"
     dest: "{{ item.dest }}"

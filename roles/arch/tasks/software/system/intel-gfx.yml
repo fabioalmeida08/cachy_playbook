@@ -1,5 +1,8 @@
+# Intel graphics drivers
 - name: drivers | intel-gfx | install
-  tags: drivers, intel-gfx
+  tags:
+    - drivers
+    - intel-gfx
   package:
     name: "{{ item }}"
     state: latest

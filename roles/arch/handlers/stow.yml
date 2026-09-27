@@ -1,10 +1,12 @@
 - name: dotfiles | set
-  tags: dotfiles
+  tags:
+    - dotfiles
   become_user: "{{ user }}"
   shell: sh -c "cd ; git clone https://github.com/fabioalmeida08/.dotfiles ; cd .dotfiles ; stow -R --adopt -t ~ */ ; git restore . ; cd niri/.config/niri ; cp config.kdl config.kdl.bak"
 
 
 - name: dotfiles | xfce4 | set
-  tags: dotfiles
+  tags:
+    - dotfiles
   become_user: "{{ user }}"
   shell: sh -c "cd ; git clone https://github.com/fabioalmeida08/.dotfilesxfce4 ; cd .dotfilesxfce4 ; stow --adopt . ; git restore ."

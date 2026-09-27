@@ -1,5 +1,7 @@
-- name: software | obsidian | install package
-  tags: obsidian, packages
+- name: software | obsidian | install
+  tags:
+    - obsidian
+    - packages
   package:
     name: obsidian
     state: latest

@@ -1,5 +1,7 @@
-- name: software | pavucontrol | install package
-  tags: packages, pavucontrol
+- name: software | pavucontrol | install
+  tags:
+    - packages
+    - pavucontrol
   package:
     name: pavucontrol
     state: latest

@@ -1,5 +1,7 @@
-- name: software | dnsmasq | install package
-  tags: packages, dnsmasq
+- name: software | dnsmasq | install
+  tags:
+    - packages
+    - dnsmasq
   package:
     name: dnsmasq
     state: latest

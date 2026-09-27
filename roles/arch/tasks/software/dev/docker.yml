@@ -1,5 +1,8 @@
-- name: software | docker | install package
-  tags: docker, packages
+# Docker container platform
+- name: software | docker | install
+  tags:
+    - docker
+    - packages
   package:
     name: docker
     state: latest

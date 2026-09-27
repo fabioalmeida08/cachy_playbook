@@ -1,10 +1,14 @@
 - name: service | ufw | enable
-  tags: service, ufw
+  tags:
+    - service
+    - ufw
   service:
     name: ufw
     enabled: yes
 
 - name: service | ufw | start
-  tags: service, ufw
+  tags:
+    - service
+    - ufw
   shell:
     cmd: ufw enable

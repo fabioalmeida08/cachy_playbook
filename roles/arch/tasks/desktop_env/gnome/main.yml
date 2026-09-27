@@ -1,5 +1,7 @@
-- name: desktop | gnome | install packages
-  tags: desktop, gnome
+- name: desktop | gnome | install
+  tags:
+    - desktop
+    - gnome
   package:
     name: '{{ item }}'
     state: latest
