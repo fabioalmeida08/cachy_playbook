@@ -13,10 +13,11 @@
     - dconf
     - dconf-editor
 
-# - name: software | adwaita-theme | install package
+# - name: software | adwaita-theme | install
 #   become_user: "{{ user }}"
 #   tags:
-    - adwaita themes
-    - packages, themes
+#     - adwaita themes
+#     - packages
+#     - themes
 #   shell:
 #     cmd: yay -S adwaita-qt5-git adwaita-qt6-git bibata-cursor-theme --noconfirm

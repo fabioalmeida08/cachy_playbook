@@ -33,6 +33,6 @@
 # - name: software | yay | install package
 #   become_user: '{{ user }}'
 #   tags:
-    - yay
+#     - yay
 #   shell:
 #     cmd: pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin && makepkg -si
