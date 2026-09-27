@@ -1,7 +1,8 @@
 - name: software | oh-my-zsh | install
   tags:
     - zsh
-    - oh-my-zsh, packages
+    - oh-my-zsh
+    - packages
   become_user: "{{ user }}"
   shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  notify: zsh | powerlevel10k | install theme
+  notify: software | powerlevel10k | install

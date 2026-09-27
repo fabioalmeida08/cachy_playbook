@@ -1,4 +1,4 @@
-- name: config | locales | generate
+- name: config | locales | enable languages
   tags:
     - locales
   lineinfile:

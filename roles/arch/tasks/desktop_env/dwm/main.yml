@@ -19,13 +19,13 @@
     - gnome-themes-extra
     - xdg-user-dirs
   notify:
-    - config | qt5ct | desktop env
+    - config | qt5ct | theme
     - service | lightdm | enable
     - config | lightdm | greeter
     - config | lightdm | gtk greeter
-    - xdg | dirs | create
-    - wallpapers | create dir
-    - wallpapers | unzip
+    - config | xdg | create
+    - config | wallpapers | create dir
+    - config | wallpapers | unzip
 
 - name: desktop | dwm | install
   become_user: "{{ user }}"

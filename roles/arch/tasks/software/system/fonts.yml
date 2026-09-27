@@ -15,4 +15,4 @@
     - adobe-source-han-sans-cn-fonts
     - adobe-source-han-sans-kr-fonts
     - noto-fonts-emoji
-  notify: config | locales
+  notify: config | locales | enable languages

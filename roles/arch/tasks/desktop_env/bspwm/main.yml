@@ -23,11 +23,11 @@
     - gnome-themes-extra
     - xdg-user-dirs
   notify:
-    - config | bspwm | execute permission
-    - config | qt5ct | desktop env
+    - config | bspwm | permission
+    - config | qt5ct | theme
     - service | lightdm | enable
     - config | lightdm | greeter
     - config | lightdm | gtk greeter
-    - xdg | dirs | create
-    - wallpapers | create dir
-    - wallpapers | unzip
+    - config | xdg | create
+    - config | wallpapers | create dir
+    - config | wallpapers | unzip

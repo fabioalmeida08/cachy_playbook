@@ -7,8 +7,8 @@
     dest: "{{ home }}/.oh-my-zsh/custom/themes/powerlevel10k"
   notify: "{{ item }}"
   loop:
-    - zsh | p10k | source config
-    - zsh | login shell | set
+    - config | zsh | p10k config
+    - config | zsh | login shell
 
 - name: config | zsh | p10k theme
   tags:

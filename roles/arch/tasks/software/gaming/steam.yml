@@ -7,4 +7,4 @@
     state: latest
   notify: "{{ item }}"
   loop:
-    - steam | mangohud | install
+    - software | mangohud | install

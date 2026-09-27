@@ -27,7 +27,7 @@
     - thunar
   notify:
     - service | lightdm | enable
-    - xdg | dirs | create
+    - config | xdg | create
     - config | lightdm | greeter
     - config | lightdm | gtk greeter
-    - wallpapers | extract
+    - config | wallpapers | extract

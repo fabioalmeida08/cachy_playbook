@@ -38,13 +38,13 @@
     - brightnessctl
   notify:
     - service | lightdm | enable
-    - xdg | dirs | create
+    - config | xdg | create
     - config | lightdm | greeter
     - config | lightdm | gtk greeter
-    - config | qt5ct | desktop env
+    - config | qt5ct | theme
     - dotfiles | set
-    - wallpapers | extract
+    - config | wallpapers | extract
     - config | lightdm | wallpaper
-    - config | lid | block
-    - config | lid | lock when docked
-    - config | idle action | ignore
+    - config | lightdm | lid block
+    - config | lightdm | lid lock
+    - config | lightdm | idle action

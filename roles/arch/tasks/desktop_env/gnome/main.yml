@@ -29,11 +29,11 @@
     - baobab
     - nautilus
   notify:
-    - config | qt5ct | desktop env
+    - config | qt5ct | theme
     - service | gdm | enable
-    - gnome | pacman update indicator | install
-    - xdg | dirs | create
-    - gnome | extension-manager | install
-    - wallpapers | create dir
-    - wallpapers | unzip
-    - gnome | shortcuts | set
+    - desktop | gnome | pacman indicator
+    - config | xdg | create
+    - desktop | gnome | extension-manager
+    - config | wallpapers | create dir
+    - config | wallpapers | unzip
+    - desktop | gnome | shortcuts

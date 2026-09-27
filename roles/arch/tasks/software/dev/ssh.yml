@@ -5,4 +5,4 @@
   package:
     name: openssh
     state: latest
-  notify: ssh | github | create key pair
+  notify: config | ssh | github key

@@ -7,5 +7,5 @@
     state: latest
   notify: "{{ item }}"
   loop:
-    - config | dns | cache
+    - config | dnsmasq | cache
     - service | dnsmasq | start
