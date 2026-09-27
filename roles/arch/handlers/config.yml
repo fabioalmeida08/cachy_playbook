@@ -7,27 +7,6 @@
     regexp: "^Exec"
     line: "Exec={{ home }}/.scripts/modmap.sh"
 
-- name: config | git | setup
-  tags:
-    - config
-    - git
-  lineinfile:
-    path: "{{ home }}/.gitconfig"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-  with_items:
-    - { regexp: "^name", line: "name = {{ git_username }}" }
-    - { regexp: "^email", line: "email = {{ git_email }}" }
-
-- name: config | window title | shortcut
-  tags:
-    - config
-    - window title
-  lineinfile:
-    path: "{{ home }}/.config/dconf/settings.dconf"
-    regexp: "^command='bash'"
-    line: "command='bash {{ home }}/.scripts/toggle-window-title.sh'"
-
 - name: config | ssh | github key
   tags:
     - ssh

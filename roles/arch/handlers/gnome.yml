@@ -42,16 +42,6 @@
   shell:
     cmd: 'dconf load / < {{ home }}/.config/dconf/settings.dconf'
 
-- name: config | mangohud | output
-  tags:
-    - config
-    - mangohud
-  lineinfile:
-    path: '{{ home }}/.config/MangoHud/MangoHud.conf'
-    regexp: '^output_folder='
-    line: 'output_folder={{ home }}'
-
-
 - name: desktop | gnome | extension-manager
   tags:
     - gnome
