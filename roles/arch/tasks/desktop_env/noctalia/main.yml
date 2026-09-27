@@ -1,0 +1,26 @@
+# Noctalia v4 (Quickshell desktop shell)
+# v4 ships as noctalia-shell in the CachyOS repo; the AUR packages were removed
+# after the project moved to v5 (extra/noctalia).
+# 1. noctalia-qs (Quickshell fork) conflicts with quickshell/quickshell-git
+- name: desktop | noctalia | remove conflicting quickshell
+  tags:
+    - desktop
+    - noctalia
+  shell: |
+    pkgs=$(pacman -Qq quickshell quickshell-git 2>/dev/null)
+    if [ -n "$pkgs" ]; then
+      pacman -Rdd --noconfirm $pkgs
+    fi
+
+# 2. Install the shell (pulls noctalia-qs, brightnessctl, imagemagick, python...)
+- name: desktop | noctalia | install
+  tags:
+    - desktop
+    - noctalia
+    - packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - noctalia-shell
+    - cliphist

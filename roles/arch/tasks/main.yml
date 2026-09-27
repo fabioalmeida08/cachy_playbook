@@ -50,6 +50,7 @@
 - import_tasks: software/gaming/gamemode.yml
 
 - import_tasks: desktop_env/niri/main.yml
+- import_tasks: desktop_env/noctalia/main.yml
 
 #--------------Dotfiles-----------------------
 - import_tasks: software/dev/stow.yml

@@ -9,6 +9,7 @@ This playbook automates the setup of an Arch Linux workstation, including:
 - **Development tools**: git, neovim, tmux, zsh, docker, and more
 - **System utilities**: fonts, themes, bluetooth, audio, and networking
 - **Desktop environment**: niri (Wayland compositor)
+- **Desktop shell**: Noctalia v4 (Quickshell)
 - **Gaming**: Steam, Lutris, Gamemode, Proton-GE
 - **Multimedia**: mpv, qBittorrent, Firefox, Brave, Zen Browser
 - **Dotfiles**: managed via GNU Stow
