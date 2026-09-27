@@ -1,14 +1,15 @@
-- name: software | powerlevel10k | install
-  tags:
-    - zsh
-    - powerlevel10k
-  git:
-    repo: https://github.com/romkatv/powerlevel10k.git
-    dest: "{{ home }}/.oh-my-zsh/custom/themes/powerlevel10k"
-  notify: "{{ item }}"
-  loop:
-    - config | zsh | p10k config
-    - config | zsh | login shell
+# Disabled in favour of oh-my-posh (roles/arch/tasks/software/dev/oh-my-posh.yml)
+# - name: software | powerlevel10k | install
+#   tags:
+#     - zsh
+#     - powerlevel10k
+#   git:
+#     repo: https://github.com/romkatv/powerlevel10k.git
+#     dest: "{{ home }}/.oh-my-zsh/custom/themes/powerlevel10k"
+#   notify: "{{ item }}"
+#   loop:
+#     - config | zsh | p10k config
+#     - config | zsh | login shell
 
 - name: config | zsh | p10k theme
   tags:

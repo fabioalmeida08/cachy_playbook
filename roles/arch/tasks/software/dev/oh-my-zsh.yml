@@ -5,4 +5,5 @@
     - packages
   become_user: "{{ user }}"
   shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  notify: software | powerlevel10k | install
+  # notify: software | powerlevel10k | install
+  notify: config | zsh | login shell
