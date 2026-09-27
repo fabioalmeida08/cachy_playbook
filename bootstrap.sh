@@ -18,7 +18,10 @@ check_requirements () {
 }
 
 run_playbook () {
-    time ansible-playbook local.yml -K
+    # Always run from the directory where this script lives,
+    # so local.yml is found no matter where it is called from.
+    cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" || exit 1
+    time ansible-playbook ./local.yml -K
 }
 
 install_yay () {
