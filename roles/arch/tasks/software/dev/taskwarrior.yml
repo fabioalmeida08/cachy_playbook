@@ -1,5 +1,0 @@
-- name: software | taskwarrior | install package
-  tags: taskwarrior, packages
-  package:
-    name: taskwarrior
-    state: latest
