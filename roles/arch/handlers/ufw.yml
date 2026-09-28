@@ -1,14 +1,38 @@
-- name: service | ufw | enable
+# UFW firewall handlers
+#
+# São necessários DOIS passos, porque representam estados independentes:
+#
+#   1) `ufw: state=enabled`   -> grava ENABLED=yes em /etc/ufw/ufw.conf e sobe o firewall.
+#   2) `service: ... started` -> `systemctl enable --now ufw` para subir no boot.
+#
+# O passo (1) NÃO é opcional: a unit systemd do Arch executa
+# `/usr/lib/ufw/ufw-init start`, que só carrega as regras se ENABLED=yes.
+# Caso contrário ele imprime "Skip starting firewall: ufw (not enabled)" e
+# sai com rc=0 - ou seja, `systemctl start ufw` reporta sucesso sem ativar
+# firewall nenhum. O pacote instala /etc/ufw/ufw.conf com ENABLED=no.
+#
+# Handlers rodam na ordem em que são definidos (não na ordem do notify),
+# por isso o `ufw enable` vem primeiro.
+#
+# `state=enabled` usa `ufw -f enable` (force), que:
+#   - não exibe o prompt interativo "Command may disrupt existing ssh
+#     connections (y|n)?" que, sob SSH/Ansible, leria EOF, abortaria com
+#     exit 0 e deixaria o firewall desligado em silêncio;
+#   - é idempotente: se já está ativo, `ufw-init start` detecta as chains e
+#     retorna "Firewall already started" com rc=0, sem interromper conexões.
+- name: firewall | ufw | enable
+  tags:
+    - firewall
+    - ufw
+  ufw:
+    state: enabled
+
+# Mesmo padrão do handler do docker: `state: started` + `enabled: yes`.
+- name: service | ufw | start
   tags:
     - service
     - ufw
   service:
     name: ufw
     enabled: yes
-
-- name: service | ufw | start
-  tags:
-    - service
-    - ufw
-  shell:
-    cmd: ufw enable
+    state: started

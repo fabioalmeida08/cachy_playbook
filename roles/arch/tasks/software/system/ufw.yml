@@ -9,5 +9,31 @@
     - ufw
     - gufw
   notify:
-    - service | ufw | enable
+    - firewall | ufw | enable
     - service | ufw | start
+
+# Guarda para execucoes parciais (ex.: --tags firewall) em maquinas onde o
+# ufw ainda nao foi instalado - o modulo falharia com "Failed to find ufw binary".
+- name: firewall | ufw | check installed
+  tags:
+    - always
+  stat:
+    path: /usr/bin/ufw
+  register: ufw_bin
+
+# Precisa ser TASK e nao handler: as tasks rodam antes dos handlers, entao a
+# regra de SSH e gravada em /etc/ufw/user.rules ANTES de o handler
+# `firewall | ufw | enable` ativar o firewall. Sem essa ordem, um
+# `ufw enable` em maquina nova bloquearia o proprio SSH (DEFAULT_INPUT_POLICY
+# e DROP) e derrubaria a sessao do Ansible.
+- name: firewall | ufw | allow ssh
+  tags:
+    - firewall
+    - ufw
+    - ssh
+  ufw:
+    rule: allow
+    proto: tcp
+    port: "22"
+    comment: OpenSSH - prevent lockout when firewall is enabled
+  when: ufw_bin.stat.exists
