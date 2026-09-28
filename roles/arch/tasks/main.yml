@@ -39,6 +39,7 @@
 - import_tasks: software/system/flatpak.yml
 - import_tasks: software/system/ufw.yml
 - import_tasks: software/network/network-tools.yml
+- import_tasks: software/network/tailscale.yml
 
 #--------------Multimedia packages------------
 # - import_tasks: software/multimedia/flameshot.yml

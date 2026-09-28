@@ -1,0 +1,16 @@
+# Tailscale service handlers
+- name: service | tailscale | enable
+  tags:
+    - service
+    - tailscale
+  service:
+    name: tailscaled
+    enabled: yes
+
+- name: service | tailscale | start
+  tags:
+    - service
+    - tailscale
+  service:
+    name: tailscaled
+    state: started

@@ -1,0 +1,57 @@
+# Tailscale VPN mesh network
+- name: software | tailscale | install
+  tags:
+    - packages
+    - tailscale
+    - network
+  package:
+    name: tailscale
+    state: latest
+  notify:
+    - service | tailscale | enable
+    - service | tailscale | start
+
+#--------------Firewall (ufw) rules----------------
+- name: firewall | tailscale | check ufw installed
+  tags:
+    - always
+  stat:
+    path: /usr/bin/ufw
+  register: tailscale_ufw_bin
+
+- name: firewall | tailscale | allow in on tailscale0
+  tags:
+    - firewall
+    - ufw
+    - tailscale
+  ufw:
+    rule: allow
+    direction: in
+    interface: tailscale0
+    comment: Tailscale - allow all traffic from the tailnet
+  when: tailscale_ufw_bin.stat.exists
+
+- name: firewall | tailscale | allow wireguard port
+  tags:
+    - firewall
+    - ufw
+    - tailscale
+  ufw:
+    rule: allow
+    proto: udp
+    port: "41641"
+    comment: Tailscale - direct connections (WireGuard)
+  when: tailscale_ufw_bin.stat.exists
+
+- name: firewall | tailscale | allow routed tailnet traffic
+  tags:
+    - firewall
+    - ufw
+    - tailscale
+  ufw:
+    route: true
+    rule: allow
+    direction: in
+    interface: tailscale0
+    comment: Tailscale - subnet router / exit node
+  when: tailscale_ufw_bin.stat.exists
