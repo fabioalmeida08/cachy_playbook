@@ -11,7 +11,11 @@
     - service | tailscale | enable
     - service | tailscale | start
 
-#--------------Firewall (ufw) rules----------------
+#--------------Firewall (ufw) rules - server only----------------
+# No server o firewall abre TUDO que vier da interface tailscale0, para que
+# qualquer servico hospedado apos o login no tailscale seja acessivel pela
+# tailnet sem precisar de uma regra por porta.
+# No desktop nao ha regra nenhuma: incoming fica deny total (ver ufw.yml).
 - name: firewall | tailscale | check ufw installed
   tags:
     - always
@@ -29,7 +33,7 @@
     direction: in
     interface: tailscale0
     comment: Tailscale - allow all traffic from the tailnet
-  when: tailscale_ufw_bin.stat.exists
+  when: tailscale_ufw_bin.stat.exists and setup == 'server'
 
 - name: firewall | tailscale | allow wireguard port
   tags:
@@ -41,7 +45,7 @@
     proto: udp
     port: "41641"
     comment: Tailscale - direct connections (WireGuard)
-  when: tailscale_ufw_bin.stat.exists
+  when: tailscale_ufw_bin.stat.exists and setup == 'server'
 
 - name: firewall | tailscale | allow routed tailnet traffic
   tags:
@@ -54,4 +58,4 @@
     direction: in
     interface: tailscale0
     comment: Tailscale - subnet router / exit node
-  when: tailscale_ufw_bin.stat.exists
+  when: tailscale_ufw_bin.stat.exists and setup == 'server'

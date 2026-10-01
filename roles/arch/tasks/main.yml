@@ -1,11 +1,14 @@
 ---
 # Main task file - imports all other task files
+#
+# `setup` (desktop | server) comes from bootstrap.sh via -e, or from the
+# SETUP env var. It gates the GUI/desktop-only tasks; everything else runs
+# on both setups.
 #--------------Dev packages-------------------
 - import_tasks: software/dev/zsh.yml
 - import_tasks: software/dev/bash-completion.yml
 - import_tasks: software/dev/bat.yml
 - import_tasks: software/dev/git.yml
-- import_tasks: software/dev/kitty.yml
 - import_tasks: software/dev/vim.yml
 - import_tasks: software/dev/ssh.yml
 - import_tasks: software/dev/yazi.yml
@@ -23,41 +26,63 @@
 - import_tasks: software/dev/tree.yml
 - import_tasks: software/dev/npm.yml
 - import_tasks: software/dev/zoxide.yml
+- import_tasks: software/dev/hermes.yml
+
+# Desktop-only dev tools (GUI)
+- import_tasks: software/dev/kitty.yml
+  when: setup == 'desktop'
 - import_tasks: software/dev/obsidian.yml
+  when: setup == 'desktop'
 
 #--------------System packages----------------
-- import_tasks: software/system/intel-gfx.yml
 - import_tasks: software/system/bashtop.yml
 - import_tasks: software/system/unzip.yml
-- import_tasks: software/system/wireplumber.yml
-- import_tasks: software/system/pavucontrol.yml
-- import_tasks: software/system/fonts.yml
 - import_tasks: software/system/ripgrep.yml
 - import_tasks: software/system/rsync.yml
 - import_tasks: software/system/fzf.yml
 - import_tasks: software/system/sevenzip.yml
-- import_tasks: software/system/flatpak.yml
 - import_tasks: software/system/ufw.yml
 - import_tasks: software/network/network-tools.yml
 - import_tasks: software/network/tailscale.yml
 
+# Desktop-only system packages (GPU, audio, fonts, themes, bluetooth, GUI)
+- import_tasks: software/system/intel-gfx.yml
+  when: setup == 'desktop'
+- import_tasks: software/system/wireplumber.yml
+  when: setup == 'desktop'
+- import_tasks: software/system/pavucontrol.yml
+  when: setup == 'desktop'
+- import_tasks: software/system/fonts.yml
+  when: setup == 'desktop'
+- import_tasks: software/system/flatpak.yml
+  when: setup == 'desktop'
+- import_tasks: software/system/themes.yml
+  when: setup == 'desktop'
+- import_tasks: software/system/bluetooth.yml
+  when: setup == 'desktop'
+
 #--------------Multimedia packages------------
 # - import_tasks: software/multimedia/flameshot.yml
 - import_tasks: software/multimedia/mpv.yml
+  when: setup == 'desktop'
 - import_tasks: software/multimedia/qbittorrent.yml
+  when: setup == 'desktop'
 
 #--------------Gaming-------------------------
 - import_tasks: software/gaming/steam.yml
-# import_tasks: software/gaming/protonup-qt.yml
+  when: setup == 'desktop'
+- import_tasks: software/gaming/protonup-qt.yml
+  when: setup == 'desktop'
 - import_tasks: software/gaming/gamemode.yml
+  when: setup == 'desktop'
 
+#--------------Desktop environment------------
 - import_tasks: desktop_env/niri/main.yml
+  when: setup == 'desktop'
 - import_tasks: desktop_env/noctalia/main.yml
+  when: setup == 'desktop'
 
 #--------------Dotfiles-----------------------
 - import_tasks: software/dev/stow.yml
 
 #--------------Others packages/configs--------
-- import_tasks: software/system/themes.yml
-- import_tasks: software/system/bluetooth.yml
-

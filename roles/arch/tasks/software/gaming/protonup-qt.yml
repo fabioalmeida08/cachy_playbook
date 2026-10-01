@@ -1,7 +1,35 @@
+# ProtonUp-QT - GE-Proton / Luxtorpeda manager for Steam, Lutris, Heroic
+#
+# Primary path: signed package from the CachyOS repo. Fallback: AUR via yay
+# (protonup-qt is not in the official Arch repos).
+#
+# `pacman -Si` is the availability check instead of a hardcoded path so it
+# also works on vanilla Arch, where the AUR branch is taken.
+
+- name: software | protonup-qt | check repo
+  tags:
+    - protonup-qt
+    - packages
+  command: pacman -Si protonup-qt
+  register: protonup_repo
+  changed_when: false
+  failed_when: false
+
 - name: software | protonup-qt | install
+  tags:
+    - protonup-qt
+    - packages
+  package:
+    name: protonup-qt
+    state: latest
+  when: protonup_repo.rc == 0
+
+# Fallback: AUR via yay (installed by bootstrap.sh, not by the playbook)
+- name: software | protonup-qt | install (AUR)
   become_user: "{{ user }}"
   tags:
     - protonup-qt
     - packages
   shell:
     cmd: yay -S protonup-qt --noconfirm
+  when: protonup_repo.rc != 0

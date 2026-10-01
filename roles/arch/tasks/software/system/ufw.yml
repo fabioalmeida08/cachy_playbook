@@ -3,11 +3,8 @@
     - packages
     - ufw
   package:
-    name: '{{ item }}'
+    name: ufw
     state: latest
-  loop:
-    - ufw
-    - gufw
   notify:
     - firewall | ufw | enable
     - service | ufw | start
@@ -22,18 +19,19 @@
   register: ufw_bin
 
 # Precisa ser TASK e nao handler: as tasks rodam antes dos handlers, entao a
-# regra de SSH e gravada em /etc/ufw/user.rules ANTES de o handler
+# politica e as regras sao gravadas em /etc/ufw/ ANTES de o handler
 # `firewall | ufw | enable` ativar o firewall. Sem essa ordem, um
-# `ufw enable` em maquina nova bloquearia o proprio SSH (DEFAULT_INPUT_POLICY
-# e DROP) e derrubaria a sessao do Ansible.
-- name: firewall | ufw | allow ssh
+# `ufw enable` em maquina nova usaria as politicas default em silencio.
+#
+# Incoming e deny total nos DOIS ambientes (desktop e server):
+#   - desktop: nenhuma regra extra - bloqueio total, acesso so via console.
+#   - server : as regras do tailscale (todas as portas vindas da tailscale0,
+#              udp 41641 e routed) sao adicionadas em tailscale.yml.
+- name: firewall | ufw | set default deny
   tags:
     - firewall
     - ufw
-    - ssh
   ufw:
-    rule: allow
-    proto: tcp
-    port: "22"
-    comment: OpenSSH - prevent lockout when firewall is enabled
+    default: deny
+    direction: incoming
   when: ufw_bin.stat.exists

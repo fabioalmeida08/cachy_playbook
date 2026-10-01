@@ -3,6 +3,9 @@
   become: true
   vars:
     distro: "{{ ansible_facts['distribution'] }}"
+    # desktop | server - passed by bootstrap.sh via -e, or exported as SETUP.
+    # Controls firewall rules, GUI packages and the Hermes desktop app.
+    setup: "{{ lookup('env', 'SETUP') | default('desktop', true) }}"
 
   pre_tasks:
     - name: config | pre-run | check requirements
@@ -22,7 +25,8 @@
         replace: |
           [multilib]
           Include = /etc/pacman.d/mirrorlist
-      when: distro == 'Archlinux'
+      # lib32-* (steam, gamemode, intel-gfx) are desktop-only
+      when: distro == 'Archlinux' and setup == 'desktop'
 
     - name: system | pacman | update
       pacman:
@@ -35,6 +39,8 @@
     home: "/home/{{ ansible_facts['env']['SUDO_USER'] }}"  # Correção aqui
     user: "{{ ansible_facts['env']['SUDO_USER'] }}"
     ipaddr: "{{ ansible_facts['default_ipv4']['address'] }}"
+    # desktop | server (redefined here: play vars are not shared across plays)
+    setup: "{{ lookup('env', 'SETUP') | default('desktop', true) }}"
   become: true
   roles:
     - arch
