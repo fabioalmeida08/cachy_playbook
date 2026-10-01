@@ -39,6 +39,10 @@
     home: "/home/{{ ansible_facts['env']['SUDO_USER'] }}"  # Correção aqui
     user: "{{ ansible_facts['env']['SUDO_USER'] }}"
     ipaddr: "{{ ansible_facts['default_ipv4']['address'] }}"
+    # Subnet allowed to reach the server over SSH (IPv4 only): the network
+    # behind the default IPv4 route. Override with -e lan_subnet=... or export
+    # LAN_SUBNET when the SSH client sits on a different network.
+    lan_subnet: "{{ lookup('env', 'LAN_SUBNET') | default(ansible_facts['default_ipv4']['network'] + '/' + (ansible_facts['default_ipv4']['prefix'] | string), true) }}"
     # desktop | server (redefined here: play vars are not shared across plays)
     setup: "{{ lookup('env', 'SETUP') | default('desktop', true) }}"
   become: true

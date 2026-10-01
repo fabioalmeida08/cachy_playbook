@@ -25,8 +25,9 @@
 #
 # Incoming e deny total nos DOIS ambientes (desktop e server):
 #   - desktop: nenhuma regra extra - bloqueio total, acesso so via console.
-#   - server : as regras do tailscale (todas as portas vindas da tailscale0,
-#              udp 41641 e routed) sao adicionadas em tailscale.yml.
+#   - server : SSH 22/tcp de `lan_subnet` (regra abaixo) + as regras do
+#              tailscale em tailscale.yml (todas as portas vindas da
+#              tailscale0, udp 41641 e routed).
 - name: firewall | ufw | set default deny
   tags:
     - firewall
@@ -35,3 +36,26 @@
     default: deny
     direction: incoming
   when: ufw_bin.stat.exists
+
+# Server only: abre a 22 exclusivamente para a LAN.
+#
+# `src` e um CIDR IPv4, entao o ufw grava a regra apenas em
+# /etc/ufw/user.rules - nao ha contraparte em ip6tables, logo o IPv6
+# continua negado. Sem `src` o modulo espelharia a regra para o
+# user6.rules e abriria v6 junto.
+#
+# `lan_subnet` vem do local.yml (rede atras da rota IPv4 padrao), com
+# override via -e lan_subnet=... ou export LAN_SUBNET quando o cliente
+# SSH esta noutra rede. No desktop nao ha regra alguma (ver ufw.yml acima).
+- name: firewall | ssh | allow from lan
+  tags:
+    - firewall
+    - ufw
+    - ssh
+  ufw:
+    rule: allow
+    port: "22"
+    proto: tcp
+    src: "{{ lan_subnet }}"
+    comment: SSH from the LAN (IPv4 only)
+  when: ufw_bin.stat.exists and setup == 'server'

@@ -14,7 +14,7 @@ This playbook automates the setup of an Arch Linux workstation, including:
 - **Desktop shell**: Noctalia v4 (Quickshell) — `desktop` only
 - **Gaming**: Steam, Lutris, Gamemode, ProtonUp-QT (Proton-GE) — `desktop` only
 - **Multimedia**: mpv, qBittorrent, Firefox, Brave, Zen Browser — `desktop` only
-- **Firewall**: ufw with `deny incoming` on both setups; `server` additionally allows all traffic from the `tailscale0` interface (plus udp 41641 and routed tailnet traffic)
+- **Firewall**: ufw with `deny incoming` on both setups; `server` additionally allows SSH (22/tcp) from the LAN over IPv4, all traffic from the `tailscale0` interface (plus udp 41641 and routed tailnet traffic)
 - **VPN**: Tailscale on both setups
 - **Dotfiles**: managed via GNU Stow
 
@@ -25,8 +25,9 @@ packages and the Hermes desktop app.
 
 | | `desktop` | `server` |
 |---|---|---|
-| Firewall | deny incoming, no extra rules | deny incoming + all traffic from `tailscale0`, udp 41641, routed |
+| Firewall | deny incoming, no extra rules | deny incoming + SSH 22/tcp from `lan_subnet` (IPv4), all traffic from `tailscale0`, udp 41641, routed |
 | GUI packages (niri, fonts, themes, steam, …) | yes | no |
+| OpenSSH | client only (git/ssh) | client + `sshd` enabled and started |
 | Hermes Agent CLI | yes | yes |
 | Hermes desktop app | yes | no |
 | Tailscale | yes | yes |
@@ -52,8 +53,20 @@ ansible-playbook local.yml -K -e setup=server
 - **`desktop` blocks everything, including SSH.** There is no `ufw allow` rule
   on purpose. If you run the playbook over SSH on a desktop setup, your
   session drops when the firewall is enabled and you won't be able to
-  reconnect — use a physical console. On `server`, SSH stays reachable
-  through `tailscale0` once Tailscale is logged in.
+  reconnect — use a physical console. On `server`, the playbook also enables
+  and starts `sshd`, and SSH stays reachable through `tailscale0` once
+  Tailscale is logged in, plus from the LAN.
+- **The server's SSH rule is IPv4-only and LAN-scoped.** `lan_subnet` defaults
+  to the network behind the default IPv4 route (e.g. `192.168.1.0/24`). Because
+  the source is an IPv4 CIDR, ufw writes it to `user.rules` only — no ip6tables
+  counterpart, so IPv6 stays fully denied. If the SSH client is on a different
+  network, override it:
+
+  ```bash
+  ansible-playbook local.yml -K -e setup=server -e lan_subnet=10.20.30.0/24
+  # or
+  LAN_SUBNET=10.20.30.0/24 ./bootstrap.sh
+  ```
 - **Docker published ports bypass ufw.** Containers mapping ports to
   `0.0.0.0` (`-p 8080:80`) go through the `DOCKER` chain, not ufw rules.
   On `server`, harden this with `DOCKER-USER` rules if services must only be
@@ -163,6 +176,7 @@ All tasks follow the format: `category | component | action`
 | `tailscale` | Tailscale + its firewall rules |
 | `hermes` | Hermes Agent (CLI + desktop) |
 | `opencode` | OpenCode coding agent (CLI) |
+| `ssh` | OpenSSH client; on `server` also starts `sshd` + its LAN firewall rule |
 
 ## License
 

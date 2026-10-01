@@ -6,3 +6,24 @@
     name: openssh
     state: latest
   notify: config | ssh | github key
+
+# Server only: liga o sshd que a regra `firewall | ssh | allow from lan`
+# (ufw.yml) deixa acessivel pela LAN.
+#
+# E' uma TASK direta e nao um handler notificado pelo install acima: handlers
+# so disparam quando a task reporta `changed`, e num servidor onde o openssh
+# ja esta instalado o `state: latest` nao muda nada - o notify nunca dispararia
+# e o sshd continuaria disabled. Como esta task e idempotente, ela garante o
+# estado a cada execucao.
+#
+# No desktop abre so o cliente (git/ssh para o github); o sshd fica fora,
+# alem de o firewall do desktop nao ter regra nenhuma (ver ufw.yml).
+- name: service | sshd | enable
+  tags:
+    - ssh
+    - service
+  service:
+    name: sshd
+    enabled: yes
+    state: started
+  when: setup == 'server'
