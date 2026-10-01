@@ -12,6 +12,9 @@
     - papirus-icon-theme
     - dconf
     - dconf-editor
+    # niri/Noctalia desktop look (shipped by the CachyOS niri ISO profile)
+    - adw-gtk-theme
+    - capitaine-cursors
 
 # - name: software | adwaita-theme | install
 #   become_user: "{{ user }}"

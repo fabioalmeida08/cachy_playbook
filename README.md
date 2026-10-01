@@ -10,7 +10,7 @@ This playbook automates the setup of an Arch Linux workstation, including:
 - **Development tools**: git, neovim, tmux, zsh, docker, and more
 - **AI agent**: Hermes Agent (CLI + desktop app on `desktop`)
 - **System utilities**: fonts, themes, bluetooth, audio, and networking
-- **Desktop environment**: niri (Wayland compositor) — `desktop` only
+- **Desktop environment**: niri (Wayland compositor) with XDG portals, XWayland bridge, clipboard and keyring — `desktop` only
 - **Desktop shell**: Noctalia v4 (Quickshell) — `desktop` only
 - **Gaming**: Steam, Lutris, Gamemode, ProtonUp-QT (Proton-GE) — `desktop` only
 - **Multimedia**: mpv, qBittorrent, Firefox, Brave, Zen Browser — `desktop` only

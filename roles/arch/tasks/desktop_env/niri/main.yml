@@ -1,13 +1,29 @@
 # 1. Install packages
+# The compositor itself plus the Wayland session bits that the CachyOS niri ISO
+# profile (cachyos-niri-noctalia) would otherwise install for us:
+#   - niri                     -> without it `ly` has no session to launch
+#   - xdg-desktop-portal-*     -> screenshare / file picker; niri only pulls
+#                                 xdg-desktop-portal-impl, the backends are separate
+#   - xwayland-satellite       -> X11 apps (niri has no built-in XWayland)
+#   - wl-clipboard, gnome-keyring -> noctalia/cliphist clipboard and portal secrets
+# Deliberately not installed here: noctalia (v5) -- we pin noctalia-shell (v4),
+# and cachyos-alacritty-config -- this playbook uses kitty instead.
 - name: desktop | niri | install
   tags:
     - desktop
     - niri
+    - packages
   become: true
   package:
     name: "{{ item }}"
     state: latest
   loop:
+    - niri
+    - xdg-desktop-portal-gnome
+    - xdg-desktop-portal-gtk
+    - xwayland-satellite
+    - wl-clipboard
+    - gnome-keyring
     - wlsunset
     - wpa_supplicant
     - thunar
