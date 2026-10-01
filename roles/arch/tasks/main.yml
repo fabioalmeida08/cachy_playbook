@@ -27,6 +27,7 @@
 - import_tasks: software/dev/npm.yml
 - import_tasks: software/dev/zoxide.yml
 - import_tasks: software/dev/hermes.yml
+- import_tasks: software/dev/opencode.yml
 
 # Desktop-only dev tools (GUI)
 - import_tasks: software/dev/kitty.yml

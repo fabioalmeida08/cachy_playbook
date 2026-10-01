@@ -1,0 +1,10 @@
+# OpenCode - open source coding agent
+# Shipped in the official Arch [extra] repo (no AUR/CachyOS fallback needed).
+# Runs on both setups: it is a terminal agent, no GUI involved.
+- name: software | opencode | install
+  tags:
+    - opencode
+    - packages
+  package:
+    name: opencode
+    state: latest

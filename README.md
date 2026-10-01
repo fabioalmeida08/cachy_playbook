@@ -8,7 +8,7 @@ This playbook automates the setup of an Arch Linux workstation, including:
 
 - **Setup profiles**: `desktop` (GUI) or `server` (headless), chosen interactively by `bootstrap.sh`
 - **Development tools**: git, neovim, tmux, zsh, docker, and more
-- **AI agent**: Hermes Agent (CLI + desktop app on `desktop`)
+- **AI agents**: Hermes Agent (CLI + desktop app on `desktop`) and OpenCode — both setups
 - **System utilities**: fonts, themes, bluetooth, audio, and networking
 - **Desktop environment**: niri (Wayland compositor) with XDG portals, XWayland bridge, clipboard and keyring — `desktop` only
 - **Desktop shell**: Noctalia v4 (Quickshell) — `desktop` only
@@ -162,6 +162,7 @@ All tasks follow the format: `category | component | action`
 | `ufw` | ufw rules |
 | `tailscale` | Tailscale + its firewall rules |
 | `hermes` | Hermes Agent (CLI + desktop) |
+| `opencode` | OpenCode coding agent (CLI) |
 
 ## License
 
