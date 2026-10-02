@@ -29,6 +29,12 @@
 - import_tasks: software/dev/hermes.yml
 - import_tasks: software/dev/opencode.yml
 
+# Dashboard web do Hermes exposto no IP do tailscale:9119 - so no server (no
+# desktop o incoming e deny total). Import DEPOIS de hermes.yml: a unit aponta
+# para o binario que o script oficial publica em ~/.local/bin/hermes.
+- import_tasks: software/dev/hermes-dashboard.yml
+  when: setup == 'server'
+
 # Desktop-only dev tools (GUI)
 - import_tasks: software/dev/kitty.yml
   when: setup == 'desktop'

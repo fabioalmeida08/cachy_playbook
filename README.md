@@ -8,7 +8,8 @@ This playbook automates the setup of an Arch Linux workstation, including:
 
 - **Setup profiles**: `desktop` (GUI) or `server` (headless), chosen interactively by `bootstrap.sh`
 - **Development tools**: git, neovim, tmux, zsh, docker, and more
-- **AI agents**: Hermes Agent (CLI + desktop app on `desktop`) and OpenCode — both setups
+- **AI agents**: Hermes Agent (CLI + desktop app on `desktop`), installed with the
+  official installer script, and OpenCode — both setups
 - **System utilities**: fonts, themes, bluetooth, audio, and networking
 - **Desktop environment**: niri (Wayland compositor) with XDG portals, XWayland bridge, clipboard and keyring — `desktop` only
 - **Desktop shell**: Noctalia v4 (Quickshell) — `desktop` only
@@ -30,6 +31,7 @@ packages and the Hermes desktop app.
 | OpenSSH | client only (git/ssh) | client + `sshd` enabled and started |
 | Hermes Agent CLI | yes | yes |
 | Hermes desktop app | yes | no |
+| Hermes dashboard (`9119`, tailnet only) | no | yes |
 | Tailscale | yes | yes |
 
 `bootstrap.sh` asks for the profile before doing anything. For
@@ -71,6 +73,72 @@ ansible-playbook local.yml -K -e setup=server
   `0.0.0.0` (`-p 8080:80`) go through the `DOCKER` chain, not ufw rules.
   On `server`, harden this with `DOCKER-USER` rules if services must only be
   reachable from the tailnet.
+
+## Hermes dashboard (server only)
+
+The playbook creates and enables `hermes-dashboard.service`
+(`roles/arch/templates/hermes-dashboard.service.j2` →
+`/etc/systemd/system/hermes-dashboard.service`), which runs:
+
+```bash
+hermes dashboard --host "$(tailscale ip -4)" --port 9119 --no-open
+```
+
+The bind is the machine's Tailscale IPv4 (resolved at every start), so the
+dashboard is reachable only from the tailnet — the `allow in on tailscale0`
+rule already covers port 9119, no extra firewall task. `EnvironmentFile`
+loads `~/.hermes/.env` (API keys) into the process; `Restart=always` +
+`RestartSec=10` bring it back after crashes and reboots.
+
+**The playbook never touches credentials.** A non-loopback bind engages the
+dashboard's auth gate and the process *refuses to start* without a configured
+user/password (fail-closed), and under systemd there is no interactive prompt
+to create one. So the playbook writes the unit, enables it at boot, and only
+starts the service if a credential already exists — otherwise it prints the
+steps below:
+
+```bash
+# 1. pick the model / API key (interactive)
+hermes setup
+
+# 2. create the dashboard credential (also interactive)
+hermes dashboard --host "$(tailscale ip -4)" --port 9119
+#    → no credential yet, so it offers to create username/password
+#    → choose them (writes dashboard.basic_auth to ~/.hermes/config.yaml)
+#    → Ctrl+C
+
+# 3. start it — any of these works
+sudo systemctl start hermes-dashboard
+# or reboot (enabled=yes covers the boot)
+# or re-run the playbook (the credential check now passes)
+```
+
+Verify from any machine on the tailnet:
+
+```bash
+curl -s http://<server-ts-ip>:9119/api/status | jq '.auth_required, .auth_providers'
+# true
+# ["basic"]
+```
+
+**Connecting from the client:**
+
+- Browser: `http://<server-ts-ip>:9119` → log in with the username/password.
+- Hermes Desktop: Settings → Gateways → **Remote gateway** → Remote URL
+  (`http://<server-ts-ip>:9119`) → Sign in. Sign in once; the app reuses the
+  session for the chat WebSocket.
+
+**If you rebooted before creating the credential**, the unit stops in
+`failed` after 5 attempts (`StartLimitBurst`), so the journal stays clean.
+The start-limit counter lives in RAM, so the next reboot starts fresh —
+otherwise reset it by hand:
+
+```bash
+sudo systemctl reset-failed hermes-dashboard
+sudo systemctl start hermes-dashboard
+```
+
+Logs: `journalctl -u hermes-dashboard -f`.
 
 ## Requirements
 
@@ -119,6 +187,7 @@ cachy_playbook/
 ├── roles/
 │   └── arch/
 │       ├── handlers/        # Handlers for service management
+│       ├── templates/       # Jinja2 templates (systemd units)
 │       └── tasks/           # Task definitions
 │           ├── desktop_env/ # Desktop environment configs
 │           ├── dotfiles/    # Dotfiles management
@@ -174,7 +243,7 @@ All tasks follow the format: `category | component | action`
 | `firewall` | ufw rules |
 | `ufw` | ufw rules |
 | `tailscale` | Tailscale + its firewall rules |
-| `hermes` | Hermes Agent (CLI + desktop) |
+| `hermes` | Hermes Agent (CLI + desktop app) and, on `server`, the dashboard service |
 | `opencode` | OpenCode coding agent (CLI) |
 | `ssh` | OpenSSH client; on `server` also starts `sshd` + its LAN firewall rule |
 

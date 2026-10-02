@@ -1,0 +1,93 @@
+# Hermes Agent web dashboard - SERVER ONLY (ver o `when` no import_tasks do
+# main.yml). No desktop o incoming e deny total (ver ufw.yml), entao nao ha
+# nada a expor la.
+#
+# O playbook NUNCA mexe em credencial: sem usuario/senha o dashboard recusa
+# subir (auth gate fail-closed em bind fora de loopback) e, sob systemd, nao
+# ha prompt interativo para criar a senha na hora. Por isso esta task file
+# apenas:
+#
+#   1) grava a unit e a habilita no boot (mesmo sem credencial);
+#   2) starta SOMEMENTE se a credencial ja existir;
+#   3) senao, imprime os passos manuais.
+#
+# Fluxo na maquina nova:
+#   run 1  -> hermes instalado, unit criada + enabled, service NAO startado
+#   voce   -> `hermes setup`; `hermes dashboard --host $(tailscale ip -4) ...`
+#             (o prompt cria user/senha e grava dashboard.basic_auth em
+#             ~/.hermes/config.yaml); depois: reboot ou `systemctl start`
+#   run 2  -> o check abaixo acha a credencial e o service sobe
+#
+# O check aceita as DUAS superficies que o provider `basic` le (env vence
+# config, entao as duas contam): ~/.hermes/.env com
+# HERMES_DASHBOARD_BASIC_AUTH_USERNAME, ou ~/.hermes/config.yaml com o bloco
+# `basic_auth:`.
+
+- name: software | hermes-dashboard | install unit
+  tags:
+    - hermes
+    - service
+  template:
+    src: hermes-dashboard.service.j2
+    dest: /etc/systemd/system/hermes-dashboard.service
+    owner: root
+    group: root
+    mode: "0644"
+  register: hermes_unit
+
+# `daemon_reload` so quando a unit mudou: o modulo reporta `changed` toda vez
+# que recarrega, e sem esse guarda a run ficaria amarela mesmo sem nada novo.
+#
+# `enabled: yes` incondicional de proposito: e o que faz o `reboot` do fluxo
+# manual subir o servico sozinho, mesmo que esta run ainda nao tenha achado
+# credencial (o StartLimit da unit evita loop infinito nesse caso).
+- name: software | hermes-dashboard | enable
+  tags:
+    - hermes
+    - service
+  systemd:
+    name: hermes-dashboard
+    enabled: yes
+    daemon_reload: "{{ hermes_unit.changed }}"
+
+- name: software | hermes-dashboard | check auth configured
+  tags:
+    - hermes
+    - service
+  become_user: "{{ user }}"
+  shell: >
+    grep -qs '^HERMES_DASHBOARD_BASIC_AUTH_USERNAME' {{ home }}/.hermes/.env ||
+    grep -qs 'basic_auth:' {{ home }}/.hermes/config.yaml
+  register: hermes_auth
+  changed_when: false
+  failed_when: false
+
+# Sobe o servico so quando ha credencial para passar do gate.
+# `restarted` (em vez de `started`) quando a unit foi alterada nesta run, para
+# que uma mudanca em ExecStart/etc nao espere um reboot para valer.
+- name: software | hermes-dashboard | start
+  tags:
+    - hermes
+    - service
+  systemd:
+    name: hermes-dashboard
+    state: "{{ 'restarted' if hermes_unit is changed else 'started' }}"
+  when: hermes_auth.rc == 0
+
+- name: software | hermes-dashboard | pending manual setup
+  tags:
+    - hermes
+    - service
+  debug:
+    msg: >-
+      hermes-dashboard habilitado no boot, mas ainda sem credencial (o
+      dashboard recusa subir sem ela - fail-closed). Proximos passos no
+      servidor:
+      (1) `hermes setup` para escolher o modelo/API key;
+      (2) `hermes dashboard --host $(tailscale ip -4) --port 9119` e criar
+      usuario/senha quando ele perguntar (Ctrl+C em seguida);
+      (3) `sudo systemctl start hermes-dashboard` - ou simplesmente rebootar.
+      Verificar de qualquer maquina da tailnet:
+      `curl -s http://<ip-ts>:9119/api/status | jq '.auth_required, .auth_providers'`
+      (esperado: true / ["basic"]).
+  when: hermes_auth.rc != 0
