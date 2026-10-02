@@ -1,52 +1,24 @@
 # Hermes Agent - locally-run AI agent (Nous Research)
 #
-# Primary path: the signed package from the CachyOS repo (installs
-# /usr/bin/hermes + /opt/hermes-agent). Fallback: the official installer
-# script (CLI only, per-user install in ~/.hermes + ~/.local/bin/hermes).
+# Only path: the official installer script (CLI only, per-user install in
+# ~/.hermes + ~/.local/bin/hermes). On `desktop` the extra `--include-desktop`
+# flag also builds the Electron app inside the checkout - that is the app the
+# README table lists as desktop-only.
 #
-# `pacman -Si` is the availability check instead of `distro == 'CachyOS'` so
-# it also works on vanilla Arch with the CachyOS repos enabled.
+# Idempotency comes from `creates`: once ~/.local/bin/hermes exists the task is
+# skipped, so re-runs neither re-clone nor rebuild (and `hermes update` stays
+# the way to upgrade).
 #
 # `hermes setup` / `hermes model` are interactive and stay manual - run them
 # once after provisioning to pick the provider/API key.
 
-- name: software | hermes | check repo
-  tags:
-    - hermes
-    - packages
-  command: pacman -Si hermes-agent
-  register: hermes_repo
-  changed_when: false
-  failed_when: false
-
-- name: software | hermes | install
-  tags:
-    - hermes
-    - packages
-  package:
-    name: hermes-agent
-    state: latest
-  when: hermes_repo.rc == 0
-
-- name: software | hermes-desktop | install
-  tags:
-    - hermes
-    - packages
-    - desktop
-  package:
-    name: hermes-agent-desktop
-    state: latest
-  when: hermes_repo.rc == 0 and setup == 'desktop'
-
-# Fallback when the repo is not available: official script as the target user
-# (running it as root would install into root's home). `--non-interactive`
-# skips the setup wizard, `creates` keeps it idempotent.
 - name: software | hermes | install (official script)
   tags:
     - hermes
     - packages
   become_user: "{{ user }}"
   shell:
-    cmd: curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive
+    cmd: >
+      curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s --
+      --non-interactive{% if setup == 'desktop' %} --include-desktop{% endif %}
     creates: "{{ home }}/.local/bin/hermes"
-  when: hermes_repo.rc != 0
