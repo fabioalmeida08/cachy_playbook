@@ -93,4 +93,8 @@
 #--------------Dotfiles-----------------------
 - import_tasks: software/dev/stow.yml
 
+# ly login-screen config mirrors the stowed dotfiles into /etc (desktop only)
+- import_tasks: desktop_env/ly/main.yml
+  when: setup == 'desktop'
+
 #--------------Others packages/configs--------

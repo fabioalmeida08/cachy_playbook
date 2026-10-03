@@ -1,0 +1,46 @@
+# ly reads its config as ROOT when ly@tty1 starts: the unit ships no User=,
+# so the "user config" path it would probe is /root/.config/ly - the stowed
+# ~/.config/ly in the real user's home is NEVER read at the login screen.
+# The package installs /etc/ly/config.ini with `animation = none`, so without
+# this step a fresh install boots to a plain login box even though the
+# dotfiles already carry the tuned config (animation = matrix, bigclock,
+# brightness keys, vi mode...).
+#
+# Ordering: desktop_env/niri/main.yml installs + enables ly before this file
+# runs, and software/dev/stow.yml (handler) has already cloned the dotfiles -
+# they stay the source of truth, this task only mirrors the file into /etc.
+# Re-run the playbook after `ly` package upgrades: the package file has no
+# backup= entry, so pacman may reset it to the defaults.
+- name: desktop | ly | check dotfiles config
+  tags:
+    - desktop
+    - ly
+  stat:
+    path: "{{ home }}/.dotfiles/ly/.config/ly/config.ini"
+  register: ly_config
+
+- name: desktop | ly | install system config
+  tags:
+    - desktop
+    - ly
+  become: true
+  copy:
+    src: "{{ home }}/.dotfiles/ly/.config/ly/config.ini"
+    dest: /etc/ly/config.ini
+    owner: root
+    group: root
+    mode: "0644"
+    backup: true
+  when: ly_config.stat.exists
+
+- name: desktop | ly | pending dotfiles
+  tags:
+    - desktop
+    - ly
+  debug:
+    msg: >-
+      {{ home }}/.dotfiles/ly/.config/ly/config.ini nao encontrado (o stow
+      das dotfiles nao rodou) - o login ficara com o tema padrao do ly
+      (animation = none). Rode o playbook de novo depois de clonar/stow as
+      dotfiles, ou copie o arquivo para /etc/ly/config.ini na mao.
+  when: not ly_config.stat.exists

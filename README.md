@@ -14,6 +14,9 @@ This playbook automates the setup of an Arch Linux workstation, including:
 - **Graphics drivers**: Intel (mesa) and NVIDIA through `chwd`, the same hardware detection the CachyOS graphical installer uses (explicit `nvidia-dkms-580xx` profile when the chip is in `nvidia-580.ids`) — `desktop` only
 - **Desktop environment**: niri (Wayland compositor) with XDG portals, XWayland bridge, clipboard and keyring — `desktop` only
 - **Desktop shell**: Noctalia v4 (Quickshell) — `desktop` only
+- **Login screen**: ly (TUI display manager) with the matrix animation — the
+  dotfiles config is mirrored into `/etc/ly/config.ini` (the DM runs as root
+  and never reads `~/.config/ly`) — `desktop` only
 - **Gaming**: Steam, Gamemode, ProtonUp-QT (Proton-GE) — `desktop` only
 - **Multimedia**: mpv, qBittorrent — `desktop` only (Zen Browser comes from `bootstrap.sh`)
 - **Firewall**: ufw with `deny incoming` on both setups; `server` additionally allows SSH (22/tcp) from the LAN over IPv4, all traffic from the `tailscale0` interface (plus udp 41641 and routed tailnet traffic)
