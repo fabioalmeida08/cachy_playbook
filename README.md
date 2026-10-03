@@ -11,6 +11,7 @@ This playbook automates the setup of an Arch Linux workstation, including:
 - **AI agents**: Hermes Agent (CLI + desktop app on `desktop`), installed with the
   official installer script, and OpenCode — both setups
 - **System utilities**: fonts, themes, bluetooth, audio, and networking
+- **Graphics drivers**: Intel (mesa) and NVIDIA through `chwd`, the same hardware detection the CachyOS graphical installer uses (explicit `nvidia-dkms-580xx` profile when the chip is in `nvidia-580.ids`) — `desktop` only
 - **Desktop environment**: niri (Wayland compositor) with XDG portals, XWayland bridge, clipboard and keyring — `desktop` only
 - **Desktop shell**: Noctalia v4 (Quickshell) — `desktop` only
 - **Gaming**: Steam, Lutris, Gamemode, ProtonUp-QT (Proton-GE) — `desktop` only
@@ -28,6 +29,7 @@ packages and the Hermes desktop app.
 |---|---|---|
 | Firewall | deny incoming, no extra rules | deny incoming + SSH 22/tcp from `lan_subnet` (IPv4), all traffic from `tailscale0`, udp 41641, routed |
 | GUI packages (niri, fonts, themes, steam, …) | yes | no |
+| Graphics drivers (Intel mesa + NVIDIA via `chwd`) | yes | no |
 | OpenSSH | client only (git/ssh) | client + `sshd` enabled and started |
 | Hermes Agent CLI | yes | yes |
 | Hermes desktop app | yes | no |
@@ -236,6 +238,7 @@ All tasks follow the format: `category | component | action`
 | `config` | Configuration tasks |
 | `service` | Service management |
 | `drivers` | Graphics drivers |
+| `nvidia` | NVIDIA drivers via `chwd` (only on `setup=desktop`) |
 | `desktop` | Desktop environment (only on `setup=desktop`) |
 | `dotfiles` | Dotfiles management |
 | `fonts` | Font installation |

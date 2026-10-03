@@ -1,15 +1,148 @@
-# NVIDIA graphics drivers
+# NVIDIA graphics drivers - delegated to chwd (CachyOS Hardware Detection),
+# the same tool the graphical installer runs during install. The playbook just
+# converges to the same state, idempotently, and adds what neither the
+# installer nor chwd does (video/render group + post-reboot verification).
+#
+# What the `nvidia-dkms-580xx` profile does on its own (NOT duplicated here):
+#   - installs the full package set (nvidia-580xx-dkms/utils/settings,
+#     opencl + lib32, lib32-nvidia-580xx-utils, libva-nvidia-driver,
+#     vulkan-icd-loader + lib32) plus {kernel}-headers for every kernel;
+#   - writes /etc/mkinitcpio.conf.d/10-chwd.conf (embeds the nvidia modules)
+#     and drops the mkinitcpio `kms` hook;
+#   - pacman resolves the conflicts: nvidia-580xx-dkms vs NVIDIA-MODULE (drops
+#     linux-cachyos-nvidia-open / nvidia-open-dkms) and nvidia-580xx-utils vs
+#     nvidia-utils (drops the 615 branch).
+# The `blacklist nouveau` ships inside the package (usr/lib/modprobe.d/) and
+# nvidia_drm.modeset/fbdev already default to 1 in the 580 module sources
+# (nvidia-drm-os-interface.c), so nothing is written to /etc/modprobe.d here.
+#
+# Profile choice mirrors chwd's own database: chip listed in
+# /var/lib/chwd/ids/nvidia-580.ids (Maxwell -> Ada, incl. the GTX 1060)
+# -> explicit `chwd -i nvidia-dkms-580xx`; anything else -> `chwd -a` and let
+# CachyOS pick (open / 470xx / nouveau). Skips cleanly when chwd or an NVIDIA
+# GPU is missing (e.g. vanilla Arch or the Intel-only machines).
+
+- name: drivers | nvidia | detect
+  tags:
+    - drivers
+    - nvidia
+  shell: >-
+    command -v chwd >/dev/null && lspci -nn -d 10de: | grep -E 'VGA compatible|3D controller|Display controller' | head -n1
+  register: nvidia_env
+  changed_when: false
+  failed_when: false
+
+# "06:00.0 VGA compatible controller [0300]: ... [10de:1c03] (rev a1)" ->
+# "1c03"; empty string when there is no NVIDIA display controller (or no chwd).
+- name: drivers | nvidia | detect chip
+  tags:
+    - drivers
+    - nvidia
+  set_fact:
+    nvidia_chip: "{{ nvidia_env.stdout.split('[10de:')[-1].split(']')[0] if nvidia_env.rc == 0 else '' }}"
+
+- name: drivers | nvidia | skip
+  tags:
+    - drivers
+    - nvidia
+  debug:
+    msg: >-
+      drivers | nvidia skipped - no chwd (not CachyOS?) or no NVIDIA display
+      controller on this machine.
+  when: nvidia_chip == ''
+
+- name: drivers | nvidia | check 580xx support
+  tags:
+    - drivers
+    - nvidia
+  command: grep -ow {{ nvidia_chip }} /var/lib/chwd/ids/nvidia-580.ids
+  register: nvidia_580
+  changed_when: false
+  failed_when: false
+  when: nvidia_chip != ''
+
+# Explicit profile when the chip is in the 580xx list (closed branch, the only
+# one that works on Pascal); autoconfigure otherwise - chwd picks the right
+# profile (open / 470xx / nouveau) for the rest of the hardware.
+- name: drivers | nvidia | choose profile
+  tags:
+    - drivers
+    - nvidia
+  set_fact:
+    nvidia_profile: "{{ 'nvidia-dkms-580xx' if nvidia_580.rc == 0 else 'auto' }}"
+    nvidia_install_cmd: "{{ 'chwd -i nvidia-dkms-580xx' if nvidia_580.rc == 0 else 'chwd -a' }}"
+  when: nvidia_chip != ''
+
+# Guard on the profile registry instead of the packages: if the profile is
+# registered, chwd already did its job and running it again would rebuild the
+# dkms module for nothing. Missing file / absent section -> install runs.
+- name: drivers | nvidia | check installed profile
+  tags:
+    - drivers
+    - nvidia
+  shell: grep -q '^\[nvidia-dkms-580xx\]' /var/lib/chwd/local/pci/graphic_drivers/profiles.toml
+  register: nvidia_installed
+  changed_when: false
+  failed_when: false
+  when: nvidia_chip != '' and nvidia_profile == 'nvidia-dkms-580xx'
+
+- name: drivers | nvidia | check autoconfigured
+  tags:
+    - drivers
+    - nvidia
+  shell: grep -q '^\[' /var/lib/chwd/local/pci/graphic_drivers/profiles.toml
+  register: nvidia_autoinstalled
+  changed_when: false
+  failed_when: false
+  when: nvidia_chip != '' and nvidia_profile == 'auto'
+
+# Side effect worth knowing: a wrong profile installed by hand (e.g.
+# linux-cachyos-nvidia-open on Pascal) is migrated here - chwd installs the
+# right one and pacman drops the conflicting packages.
 - name: drivers | nvidia | install
   tags:
     - drivers
     - nvidia
-  package:
-    name: "{{ item }}"
-    state: latest
-  loop:
-    - nvidia-open
-    - nvidia-utils
-    - lib32-nvidia-utils
-    - nvidia-settings
-    - vulkan-icd-loader
-    - lib32-vulkan-icd-loader
+  command: "{{ nvidia_install_cmd }}"
+  register: nvidia_result
+  when: >-
+    nvidia_chip != '' and
+    ((nvidia_profile == 'nvidia-dkms-580xx' and nvidia_installed.rc != 0) or
+     (nvidia_profile == 'auto' and nvidia_autoinstalled.rc != 0))
+
+# Wayland compositors get /dev/dri through logind anyway, but the "video"
+# group is what grants backlight control and the "render" group direct render
+# node access (NVIDIA README explicitly points at the video group for KMS
+# access when fbdev is on).
+- name: drivers | nvidia | add groups
+  tags:
+    - drivers
+    - nvidia
+  user:
+    name: "{{ user }}"
+    groups: video,render
+    append: yes
+  when: nvidia_chip != ''
+
+# chwd's pre_install and the CachyOS alpm hooks usually rebuild the initramfs
+# themselves; this is a cheap safety net and only runs when the install task
+# actually changed something.
+- name: drivers | nvidia | rebuild initramfs
+  tags:
+    - drivers
+    - nvidia
+  command: mkinitcpio -P
+  when: nvidia_chip != '' and nvidia_result is changed
+
+- name: drivers | nvidia | verify
+  tags:
+    - drivers
+    - nvidia
+  debug:
+    msg: >-
+      {{ 'Profile instalado nesta run - reinicie (sudo reboot) antes de conferir. '
+         if nvidia_result is changed else 'Profile ja instalado - nada mudou nesta run. ' }}
+      Apos o reboot: nvidia-smi; cat /sys/module/nvidia_drm/parameters/modeset
+      (esperado Y); glxinfo -B | grep -i renderer; vulkaninfo --summary;
+      chwd --list-installed (esperado nvidia-dkms-580xx).
+  when: nvidia_chip != ''

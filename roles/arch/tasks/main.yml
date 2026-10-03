@@ -55,6 +55,8 @@
 # Desktop-only system packages (GPU, audio, fonts, themes, bluetooth, GUI)
 - import_tasks: software/system/intel-gfx.yml
   when: setup == 'desktop'
+- import_tasks: software/system/nvidia-drivers.yml
+  when: setup == 'desktop'
 - import_tasks: software/system/wireplumber.yml
   when: setup == 'desktop'
 - import_tasks: software/system/pavucontrol.yml
