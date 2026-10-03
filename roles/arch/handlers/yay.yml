@@ -1,6 +1,0 @@
-- name: config | yay | remove
-  tags:
-    - yay
-  file:
-    path: "{{ home }}/yay"
-    state: absent

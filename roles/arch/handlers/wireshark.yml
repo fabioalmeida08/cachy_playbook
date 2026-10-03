@@ -1,8 +1,0 @@
-- name: group | wireshark | add user
-  tags:
-    - group
-    - wireshark
-  user:
-    name: "{{ user }}"
-    groups: wireshark
-    append: yes

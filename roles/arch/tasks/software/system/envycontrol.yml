@@ -1,7 +1,0 @@
-- name: software | envycontrol | install
-  tags:
-    - packages
-    - envycontrol
-  become_user: "{{ user }}"
-  shell:
-    cmd: yay -S envycontrol --noconfirm

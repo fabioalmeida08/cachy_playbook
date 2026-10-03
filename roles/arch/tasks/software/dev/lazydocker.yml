@@ -1,7 +1,0 @@
-- name: software | lazydocker | install
-  become_user: "{{ user }}"
-  tags:
-    - lazydocker
-    - packages
-  shell:
-    cmd: yay -S lazydocker --noconfirm

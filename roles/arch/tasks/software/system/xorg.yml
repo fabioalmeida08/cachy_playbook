@@ -1,7 +1,0 @@
-- name: software | xorg | install
-  tags:
-    - packages
-    - xorg
-  package:
-    name: xorg
-    state: latest

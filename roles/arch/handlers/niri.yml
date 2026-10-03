@@ -1,6 +1,0 @@
-- name: config | niri | theme
-  tags:
-    - config
-    - niri
-  become_user: "{{ user }}"
-  shell: sh -c "gsettings set org.gnome.desktop.interface color-scheme prefer-dark"

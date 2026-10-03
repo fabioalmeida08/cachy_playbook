@@ -71,7 +71,6 @@
   when: setup == 'desktop'
 
 #--------------Multimedia packages------------
-# - import_tasks: software/multimedia/flameshot.yml
 - import_tasks: software/multimedia/mpv.yml
   when: setup == 'desktop'
 - import_tasks: software/multimedia/qbittorrent.yml

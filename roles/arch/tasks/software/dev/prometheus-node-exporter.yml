@@ -1,8 +1,0 @@
-- name: software | prometheus-node-exporter | install
-  tags:
-    - prometheus-node-exporter
-    - packages
-  package:
-    name: prometheus-node-exporter
-    state: latest
-  notify: service | prometheus-node-exporter | start

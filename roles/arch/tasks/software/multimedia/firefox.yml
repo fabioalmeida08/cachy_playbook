@@ -1,7 +1,0 @@
-- name: software | firefox | install
-  tags:
-    - firefox
-    - packages
-  package:
-    name: firefox
-    state: latest
