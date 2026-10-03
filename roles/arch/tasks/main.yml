@@ -75,6 +75,8 @@
   when: setup == 'desktop'
 - import_tasks: software/multimedia/qbittorrent.yml
   when: setup == 'desktop'
+- import_tasks: software/multimedia/calibre.yml
+  when: setup == 'desktop'
 
 #--------------Gaming-------------------------
 - import_tasks: software/gaming/steam.yml

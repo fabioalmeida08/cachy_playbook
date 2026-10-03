@@ -18,7 +18,7 @@ This playbook automates the setup of an Arch Linux workstation, including:
   dotfiles config is mirrored into `/etc/ly/config.ini` (the DM runs as root
   and never reads `~/.config/ly`) — `desktop` only
 - **Gaming**: Steam, Gamemode, ProtonUp-QT (Proton-GE) — `desktop` only
-- **Multimedia**: mpv, qBittorrent — `desktop` only (Zen Browser comes from `bootstrap.sh`)
+- **Multimedia**: mpv, qBittorrent, calibre (e-book manager) — `desktop` only (Zen Browser comes from `bootstrap.sh`)
 - **Firewall**: ufw with `deny incoming` on both setups; `server` additionally allows SSH (22/tcp) from the LAN over IPv4, all traffic from the `tailscale0` interface (plus udp 41641 and routed tailnet traffic)
 - **VPN**: Tailscale on both setups
 - **Dotfiles**: managed via GNU Stow

@@ -1,0 +1,7 @@
+- name: software | calibre | install
+  tags:
+    - calibre
+    - packages
+  package:
+    name: calibre
+    state: latest
