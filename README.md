@@ -165,7 +165,6 @@ Logs: `journalctl -u hermes-dashboard -f`.
 - Arch Linux (or Arch-based distribution)
 - Ansible
 - Git
-- Vagrant (optional, for testing)
 
 ## Usage
 
@@ -193,13 +192,6 @@ ansible-playbook local.yml -K
 ansible-playbook local.yml -K -e setup=server
 ```
 
-### With Vagrant
-
-```bash
-vagrant up
-vagrant provision
-```
-
 ## Project Structure
 
 ```
@@ -212,7 +204,6 @@ cachy_playbook/
 │           ├── desktop_env/ # Desktop environment configs
 │           └── software/    # Package installation
 ├── local.yml                # Main playbook
-├── Vagrantfile              # Vagrant configuration
 └── bootstrap.sh             # Bootstrap script
 ```
 
