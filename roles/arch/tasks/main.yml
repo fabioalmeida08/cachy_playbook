@@ -67,6 +67,8 @@
   when: setup == 'desktop'
 - import_tasks: software/system/themes.yml
   when: setup == 'desktop'
+- import_tasks: software/system/virtualbox.yml
+  when: setup == 'desktop'
 - import_tasks: software/system/bluetooth.yml
   when: setup == 'desktop'
 

@@ -1,0 +1,28 @@
+# VirtualBox host + guest bits.
+# O host-dkms compila os modulos para CADA kernel instalado (linux-cachyos e
+# linux-cachyos-lts), então os dois boots continuam com o vboxdrv disponivel;
+# exige os -headers correspondentes (ja instalados nesta maquina).
+# O guest-iso e o que os hospedes usam para montar as Guest Additions - o host
+# o carrega pronto pra nao depender de internet dentro da VM.
+- name: software | virtualbox | install
+  tags:
+    - packages
+    - virtualbox
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - virtualbox
+    - virtualbox-host-dkms
+    - virtualbox-guest-iso
+    - virtualbox-guest-utils
+
+# O grupo so existe depois que o pacote base entra; append pra nao derrubar os
+# outros grupos do usuario. Precisa de relogin para valer.
+- name: config | virtualbox | add user to vboxusers
+  tags:
+    - virtualbox
+  user:
+    name: "{{ user }}"
+    groups: vboxusers
+    append: yes

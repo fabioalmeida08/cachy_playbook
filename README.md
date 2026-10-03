@@ -255,6 +255,7 @@ All tasks follow the format: `category | component | action`
 | `tailscale` | Tailscale + its firewall rules |
 | `hermes` | Hermes Agent (CLI + desktop app) and, on `server`, the dashboard service |
 | `opencode` | OpenCode coding agent (CLI) |
+| `virtualbox` | VirtualBox host (DKMS para todos os kernels) + guest utils (only on `setup=desktop`) |
 | `ssh` | OpenSSH client; on `server` also starts `sshd` + its LAN firewall rule |
 
 ## License
