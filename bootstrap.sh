@@ -27,7 +27,7 @@ select_setup () {
         echo "Qual setup você quer aplicar?"
         echo "  1) desktop  - firewall bloqueia tudo por padrão, interface gráfica, apps GUI"
         echo "  2) server   - firewall aceita só via tailscale (todas as portas)"
-        read -r -p "> " choice
+        read -r -p "Escolha [1]: " choice
         case "${choice:-1}" in
             1|desktop|d|D) SETUP="desktop" ;;
             2|server|s|S)  SETUP="server" ;;
