@@ -80,17 +80,28 @@ ansible-playbook local.yml -K -e setup=server
 
 The playbook creates and enables `hermes-dashboard.service`
 (`roles/arch/templates/hermes-dashboard.service.j2` →
-`/etc/systemd/system/hermes-dashboard.service`), which runs:
+`/etc/systemd/system/hermes-dashboard.service`), whose `ExecStart` calls the
+start wrapper (`roles/arch/templates/hermes-dashboard.sh.j2` →
+`/usr/lib/hermes-dashboard/start.sh`):
 
 ```bash
-hermes dashboard --host "$(tailscale ip -4)" --port 9119 --no-open
+#!/bin/sh
+IP=$(/usr/bin/tailscale ip -4) || exit 1
+[ -n "$IP" ] || exit 1
+exec ~/.local/bin/hermes dashboard --host "$IP" --port 9119 --no-open
 ```
 
-The bind is the machine's Tailscale IPv4 (resolved at every start), so the
-dashboard is reachable only from the tailnet — the `allow in on tailscale0`
-rule already covers port 9119, no extra firewall task. `EnvironmentFile`
-loads `~/.hermes/.env` (API keys) into the process; `Restart=always` +
-`RestartSec=10` bring it back after crashes and reboots.
+The wrapper exists because **systemd has no command substitution**: a
+`$(tailscale ip -4)` written directly in `ExecStart` is erased as an invalid
+variable, `--host` ends up without a value and the service dies with exit 2
+on every boot. The shell in the wrapper resolves the IP at every start, so
+nothing is hardcoded and a changed IP is picked up on the next restart.
+
+The bind is the machine's Tailscale IPv4, so the dashboard is reachable only
+from the tailnet — the `allow in on tailscale0` rule already covers port 9119,
+no extra firewall task. `EnvironmentFile` loads `~/.hermes/.env` (API keys)
+into the process; `Restart=always` + `RestartSec=10` bring it back after
+crashes and reboots.
 
 **The playbook never touches credentials.** A non-loopback bind engages the
 dashboard's auth gate and the process *refuses to start* without a configured
@@ -100,16 +111,19 @@ starts the service if a credential already exists — otherwise it prints the
 steps below:
 
 ```bash
-# 1. pick the model / API key (interactive)
+# 1. log into the tailnet — the wrapper refuses to start without an IP
+tailscale up
+
+# 2. pick the model / API key (interactive)
 hermes setup
 
-# 2. create the dashboard credential (also interactive)
+# 3. create the dashboard credential (also interactive)
 hermes dashboard --host "$(tailscale ip -4)" --port 9119
 #    → no credential yet, so it offers to create username/password
 #    → choose them (writes dashboard.basic_auth to ~/.hermes/config.yaml)
 #    → Ctrl+C
 
-# 3. start it — any of these works
+# 4. start it — any of these works
 sudo systemctl start hermes-dashboard
 # or reboot (enabled=yes covers the boot)
 # or re-run the playbook (the credential check now passes)
@@ -130,10 +144,11 @@ curl -s http://<server-ts-ip>:9119/api/status | jq '.auth_required, .auth_provid
   (`http://<server-ts-ip>:9119`) → Sign in. Sign in once; the app reuses the
   session for the chat WebSocket.
 
-**If you rebooted before creating the credential**, the unit stops in
-`failed` after 5 attempts (`StartLimitBurst`), so the journal stays clean.
+**If you rebooted before creating the credential** — or with the node logged
+out of tailscale, which makes the wrapper exit without an IP — the unit stops
+in `failed` after 5 attempts (`StartLimitBurst`), so the journal stays clean.
 The start-limit counter lives in RAM, so the next reboot starts fresh —
-otherwise reset it by hand:
+otherwise fix the cause (`tailscale up` / credential) and reset by hand:
 
 ```bash
 sudo systemctl reset-failed hermes-dashboard

@@ -12,16 +12,45 @@
 #   3) senao, imprime os passos manuais.
 #
 # Fluxo na maquina nova:
-#   run 1  -> hermes instalado, unit criada + enabled, service NAO startado
-#   voce   -> `hermes setup`; `hermes dashboard --host $(tailscale ip -4) ...`
+#   run 1  -> hermes instalado, unit + wrapper instalados, service NAO startado
+#   voce   -> (0) `tailscale up` (o wrapper aborta sem IP da tailnet);
+#             (1) `hermes setup`; (2) `hermes dashboard --host $(tailscale ip -4) ...`
 #             (o prompt cria user/senha e grava dashboard.basic_auth em
-#             ~/.hermes/config.yaml); depois: reboot ou `systemctl start`
+#             ~/.hermes/config.yaml); (3) depois: reboot ou `systemctl start`
 #   run 2  -> o check abaixo acha a credencial e o service sobe
 #
 # O check aceita as DUAS superficies que o provider `basic` le (env vence
 # config, entao as duas contam): ~/.hermes/.env com
 # HERMES_DASHBOARD_BASIC_AUTH_USERNAME, ou ~/.hermes/config.yaml com o bloco
 # `basic_auth:`.
+
+# O wrapper existe porque o systemd NAO faz command substitution: um
+# `$(tailscale ip -4)` no ExecStart e apagado como variavel invalida (o
+# journal mostra "Invalid environment variable name evaluates to an empty
+# string"), o argparse recebe --host sem valor e mata o servico com exit 2
+# em TODO boot. O shell do wrapper resolve o IP de verdade, a cada start.
+- name: software | hermes-dashboard | start script dir
+  tags:
+    - hermes
+    - service
+  file:
+    path: /usr/lib/hermes-dashboard
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: software | hermes-dashboard | install start script
+  tags:
+    - hermes
+    - service
+  template:
+    src: hermes-dashboard.sh.j2
+    dest: /usr/lib/hermes-dashboard/start.sh
+    owner: root
+    group: root
+    mode: "0755"
+  register: hermes_script
 
 - name: software | hermes-dashboard | install unit
   tags:
@@ -63,15 +92,16 @@
   failed_when: false
 
 # Sobe o servico so quando ha credencial para passar do gate.
-# `restarted` (em vez de `started`) quando a unit foi alterada nesta run, para
-# que uma mudanca em ExecStart/etc nao espere um reboot para valer.
+# `restarted` (em vez de `started`) quando a unit OU o wrapper foram alterados
+# nesta run, para que uma mudanca em ExecStart/etc nao espere um reboot para
+# valer.
 - name: software | hermes-dashboard | start
   tags:
     - hermes
     - service
   systemd:
     name: hermes-dashboard
-    state: "{{ 'restarted' if hermes_unit is changed else 'started' }}"
+    state: "{{ 'restarted' if (hermes_unit is changed or hermes_script is changed) else 'started' }}"
   when: hermes_auth.rc == 0
 
 - name: software | hermes-dashboard | pending manual setup
@@ -83,10 +113,12 @@
       hermes-dashboard habilitado no boot, mas ainda sem credencial (o
       dashboard recusa subir sem ela - fail-closed). Proximos passos no
       servidor:
-      (1) `hermes setup` para escolher o modelo/API key;
-      (2) `hermes dashboard --host $(tailscale ip -4) --port 9119` e criar
+      (1) `tailscale up` se ainda nao estiver logado - sem IP da tailnet o
+      wrapper aborta e a unit para em failed;
+      (2) `hermes setup` para escolher o modelo/API key;
+      (3) `hermes dashboard --host $(tailscale ip -4) --port 9119` e criar
       usuario/senha quando ele perguntar (Ctrl+C em seguida);
-      (3) `sudo systemctl start hermes-dashboard` - ou simplesmente rebootar.
+      (4) `sudo systemctl start hermes-dashboard` - ou simplesmente rebootar.
       Verificar de qualquer maquina da tailnet:
       `curl -s http://<ip-ts>:9119/api/status | jq '.auth_required, .auth_providers'`
       (esperado: true / ["basic"]).

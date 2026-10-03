@@ -5,9 +5,11 @@
 #
 # The dashboard is bound to the machine's tailscale IPv4 so only the tailnet
 # can reach it (the server's ufw already allows everything coming in on
-# tailscale0 - no extra rule needed). `$(tailscale ip -4)` is resolved at every
-# start: the node IP is stable per machine, but this way nothing is hardcoded
-# and a changed IP is picked up on the next restart.
+# tailscale0 - no extra rule needed). The IP is resolved at every start by the
+# start wrapper (hermes-dashboard.sh.j2 -> /usr/lib/hermes-dashboard/start.sh):
+# systemd itself has no command substitution - it erases `$(...)` as an
+# invalid variable - so the wrapper's shell does it. Nothing is hardcoded and
+# a changed IP is picked up on the next restart.
 #
 # A non-loopback bind engages the dashboard auth gate: without a configured
 # user/password the process REFUSES to start (fail-closed). That is expected
@@ -40,7 +42,7 @@ Type=simple
 User={{ user }}
 WorkingDirectory={{ home }}
 EnvironmentFile=-%h/.hermes/.env
-ExecStart={{ home }}/.local/bin/hermes dashboard --host "$(tailscale ip -4)" --port 9119 --no-open
+ExecStart=/usr/lib/hermes-dashboard/start.sh
 Restart=always
 RestartSec=10
 RestartPreventExitStatus=78

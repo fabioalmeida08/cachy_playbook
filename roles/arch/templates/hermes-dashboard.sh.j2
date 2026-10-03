@@ -1,0 +1,25 @@
+#!/bin/sh
+# Hermes Agent web dashboard - start wrapper rendered by Ansible.
+#
+# systemd has NO command substitution: `$(...)` in ExecStart is treated as an
+# invalid environment variable and erased to an empty string (journal:
+# "Invalid environment variable name evaluates to an empty string"), which
+# left `--host` without a value and killed the service with exit 2
+# (argparse) on every boot. So the tailnet IP is resolved HERE, by a real
+# shell, at every start.
+#
+# The bind is the machine's tailscale IPv4 so only the tailnet can reach the
+# dashboard (the server's ufw already allows everything coming in on
+# tailscale0). Nothing is hardcoded: a changed IP is picked up on the next
+# restart.
+#
+# Non-zero exit (tailscale missing, logged out, or no IP) = the service
+# retries via Restart=always/RestartSec=10 and parks in `failed` after
+# StartLimitBurst attempts - exactly like the pre-credential case, so the
+# journal stays clean. `tailscale up` + `systemctl reset-failed` (or a
+# reboot) brings it back.
+
+IP=$(/usr/bin/tailscale ip -4) || exit 1
+[ -n "$IP" ] || exit 1
+
+exec {{ home }}/.local/bin/hermes dashboard --host "$IP" --port 9119 --no-open
