@@ -33,7 +33,7 @@ packages and the Hermes desktop app.
 | Firewall | deny incoming, no extra rules | deny incoming + SSH 22/tcp from `lan_subnet` (IPv4), all traffic from `tailscale0`, udp 41641, routed |
 | GUI packages (niri, fonts, themes, steam, …) | yes | no |
 | Graphics drivers (Intel mesa + NVIDIA via `chwd`) | yes | no |
-| OpenSSH | client only (git/ssh) | client + `sshd` enabled and started |
+| OpenSSH | client only (git/ssh) + `~/.ssh/id_ed25519` created on first run | client + `sshd` enabled and started |
 | Hermes Agent CLI | yes | yes |
 | Hermes desktop app | yes | no |
 | Hermes dashboard (`9119`, tailnet only) | no | yes |
@@ -256,7 +256,7 @@ All tasks follow the format: `category | component | action`
 | `hermes` | Hermes Agent (CLI + desktop app) and, on `server`, the dashboard service |
 | `opencode` | OpenCode coding agent (CLI) |
 | `virtualbox` | VirtualBox host (DKMS para todos os kernels) + guest utils (only on `setup=desktop`) |
-| `ssh` | OpenSSH client; on `server` also starts `sshd` + its LAN firewall rule |
+| `ssh` | OpenSSH client + ed25519 GitHub key (`~/.ssh/id_ed25519`, created if missing); on `server` also starts `sshd` + its LAN firewall rule |
 
 ## License
 

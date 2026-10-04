@@ -5,7 +5,6 @@
   package:
     name: openssh
     state: latest
-  notify: config | ssh | github key
 
 # Server only: liga o sshd que a regra `firewall | ssh | allow from lan`
 # (ufw.yml) deixa acessivel pela LAN.
@@ -27,3 +26,32 @@
     enabled: yes
     state: started
   when: setup == 'server'
+
+# Chave ed25519 pro github.
+#
+# E' uma TASK direta e nao o handler notificado pelo install acima: notify so
+# dispara com `changed` no pacote, entao um upgrade do openssh com a chave ja
+# existente derrubava o ssh-keygen no prompt de overwrite (non-interactive =
+# falha no fim do run). `creates` garante que roda toda execucao, mas so cria
+# 1x; -C fixa o comentario user@hostname.
+#
+# O ~/.ssh tambem e task direta: ssh-keygen NAO cria o dir pai (testado), e o
+# bootstrap clona via https, entao numa maquina nova o diretorio nao existe.
+- name: software | ssh | dot dir
+  tags:
+    - ssh
+    - github
+  become_user: "{{ user }}"
+  file:
+    path: "{{ home }}/.ssh"
+    state: directory
+    mode: "0700"
+
+- name: software | ssh | github key
+  tags:
+    - ssh
+    - github
+  become_user: "{{ user }}"
+  command:
+    cmd: ssh-keygen -t ed25519 -f {{ home }}/.ssh/id_ed25519 -C {{ user }}@{{ ansible_facts['nodename'] }} -N ''
+    creates: "{{ home }}/.ssh/id_ed25519"
