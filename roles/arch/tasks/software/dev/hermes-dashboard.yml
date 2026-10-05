@@ -113,8 +113,9 @@
       hermes-dashboard habilitado no boot, mas ainda sem credencial (o
       dashboard recusa subir sem ela - fail-closed). Proximos passos no
       servidor:
-      (1) `tailscale up` se ainda nao estiver logado - sem IP da tailnet o
-      wrapper aborta e a unit para em failed;
+      (1) `tailscale up` se ainda nao estiver logado - o wrapper espera ate
+      120s pelo IP da tailnet (boot com wifi demora ~2min); sem rede ou
+      login ele desiste e a unit para em failed apos ~12min de retries;
       (2) `hermes setup` para escolher o modelo/API key;
       (3) `hermes dashboard --host $(tailscale ip -4) --port 9119` e criar
       usuario/senha quando ele perguntar (Ctrl+C em seguida);

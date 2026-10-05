@@ -14,17 +14,32 @@
 # A non-loopback bind engages the dashboard auth gate: without a configured
 # user/password the process REFUSES to start (fail-closed). That is expected
 # before the manual `hermes setup` / credential step - see README "Hermes
-# dashboard (server)". Restart=always + RestartSec=10 make the service come up
-# by itself as soon as the credential exists.
+# dashboard (server)".
+#
+# BOOT ORDER: the wrapper polls for the tailnet IP for up to 120s (tailscaled
+# only gets an address after the NIC is up AND the node logged in - ~2min on
+# this box over wifi), and the unit orders after both network-online.target
+# and tailscaled.service (Wants= so the target really gets pulled in; an
+# After=network-online.target alone does not). `tailscaled.service` being
+# active only means the daemon runs, NOT that an IP exists - that is what the
+# wrapper's wait loop covers.
+#
+# Restart=always + exponential backoff (RestartSec=5, doubling per
+# RestartSteps=8 up to RestartMaxDelaySec=60): transient failures - wifi slow
+# to associate, tailscale login retrying, dashboard crashing - are retried
+# over ~12 minutes instead of the old fixed 10s x 5 attempts (~50s), which
+# exhausted the budget BEFORE tailscale even had an IP and left the unit in
+# `failed` on every boot.
 #
 # RestartPreventExitStatus=78: exit 78 is a deliberate refusal ("this host is
 # already served by PID ... on another port"); parking on it beats an infinite
 # restart loop with nothing listening.
 #
-# StartLimit*: without it, a reboot done BEFORE the credential exists would
-# retry forever and fill the journal. With it the unit stops in `failed` after
-# 5 attempts in ~50s; the counter lives in RAM, so the next reboot (or
-# `systemctl reset-failed` + start) begins clean.
+# StartLimit*: without it, a permanent failure (node logged out of tailscale,
+# no credential) would retry forever and fill the journal. With it the unit
+# stops in `failed` after 5 starts inside StartLimitIntervalSec - i.e. ~12
+# minutes given the wrapper's 120s wait per attempt - and the counter lives in
+# RAM, so the next reboot (or `systemctl reset-failed` + start) begins clean.
 #
 # EnvironmentFile carries ~/.hermes/.env (API keys etc.) into the process;
 # the `-` prefix only makes a missing file non-fatal (partial runs, install
@@ -33,8 +48,8 @@
 [Unit]
 Description=Hermes Agent web dashboard
 After=network-online.target tailscaled.service
-Wants=tailscaled.service
-StartLimitIntervalSec=300
+Wants=network-online.target tailscaled.service
+StartLimitIntervalSec=900
 StartLimitBurst=5
 
 [Service]
@@ -44,7 +59,9 @@ WorkingDirectory={{ home }}
 EnvironmentFile=-%h/.hermes/.env
 ExecStart=/usr/lib/hermes-dashboard/start.sh
 Restart=always
-RestartSec=10
+RestartSec=5
+RestartSteps=8
+RestartMaxDelaySec=60
 RestartPreventExitStatus=78
 
 [Install]

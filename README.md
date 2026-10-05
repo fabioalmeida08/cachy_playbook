@@ -89,8 +89,14 @@ start wrapper (`roles/arch/templates/hermes-dashboard.sh.j2` →
 
 ```bash
 #!/bin/sh
-IP=$(/usr/bin/tailscale ip -4) || exit 1
-[ -n "$IP" ] || exit 1
+IP=
+waited=0
+while [ "$waited" -lt 120 ]; do        # tailscale takes ~2min to get an IP
+  IP=$(/usr/bin/tailscale ip -4 2>/dev/null) || true
+  [ -n "$IP" ] && break
+  waited=$((waited + 5)); sleep 5
+done
+[ -n "$IP" ] || exit 1                 # systemd retries with backoff
 exec ~/.local/bin/hermes dashboard --host "$IP" --port 9119 --no-open
 ```
 
@@ -100,11 +106,20 @@ variable, `--host` ends up without a value and the service dies with exit 2
 on every boot. The shell in the wrapper resolves the IP at every start, so
 nothing is hardcoded and a changed IP is picked up on the next restart.
 
+It also **waits for the IP instead of aborting on the first miss**: tailscaled
+only has an address once the NIC is up *and* the node has logged in, which on
+a wifi boot takes ~2 minutes (measured: NIC at T+100s, tailscale `Running` at
+T+122s). The first attempt polls every 5s for up to 120s and normally
+succeeds on its own; only an actually broken tailnet (no `tailscale up`, no
+network) makes it give up.
+
 The bind is the machine's Tailscale IPv4, so the dashboard is reachable only
 from the tailnet — the `allow in on tailscale0` rule already covers port 9119,
 no extra firewall task. `EnvironmentFile` loads `~/.hermes/.env` (API keys)
-into the process; `Restart=always` + `RestartSec=10` bring it back after
-crashes and reboots.
+into the process; `Restart=always` with exponential backoff (`RestartSec=5`
+doubling up to `RestartMaxDelaySec=60`) brings it back after crashes and
+reboots, while `Wants=`/`After=` on `network-online.target` and
+`tailscaled.service` keep it from racing the boot.
 
 **The playbook never touches credentials.** A non-loopback bind engages the
 dashboard's auth gate and the process *refuses to start* without a configured
@@ -148,10 +163,14 @@ curl -s http://<server-ts-ip>:9119/api/status | jq '.auth_required, .auth_provid
   session for the chat WebSocket.
 
 **If you rebooted before creating the credential** — or with the node logged
-out of tailscale, which makes the wrapper exit without an IP — the unit stops
-in `failed` after 5 attempts (`StartLimitBurst`), so the journal stays clean.
-The start-limit counter lives in RAM, so the next reboot starts fresh —
-otherwise fix the cause (`tailscale up` / credential) and reset by hand:
+out of tailscale, which makes the wrapper exit without an IP — each attempt
+waits 120s and the unit retries with backoff for ~12 minutes before
+`StartLimitBurst`/`StartLimitIntervalSec` stop it in `failed`, so the journal
+stays clean instead of recording a failure every 10s. A *slow* boot (wifi
+taking a minute or two to come up) does **not** trip the limit: the wrapper's
+wait covers it on the first attempt. The start-limit counter lives in RAM, so
+the next reboot starts fresh — otherwise fix the cause (`tailscale up` /
+credential) and reset by hand:
 
 ```bash
 sudo systemctl reset-failed hermes-dashboard

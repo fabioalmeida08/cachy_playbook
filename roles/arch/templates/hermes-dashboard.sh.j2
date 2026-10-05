@@ -13,13 +13,38 @@
 # tailscale0). Nothing is hardcoded: a changed IP is picked up on the next
 # restart.
 #
-# Non-zero exit (tailscale missing, logged out, or no IP) = the service
-# retries via Restart=always/RestartSec=10 and parks in `failed` after
-# StartLimitBurst attempts - exactly like the pre-credential case, so the
-# journal stays clean. `tailscale up` + `systemctl reset-failed` (or a
-# reboot) brings it back.
+# WAIT FOR THE IP instead of aborting on the first miss: tailscaled only has
+# an address once the NIC is up AND the node has logged in, which on a boot
+# over wifi takes ~2 minutes (measured: NIC at T+100s, tailscale Running at
+# T+122s) - far beyond the retry window a bare `exit 1` would burn. So the
+# first attempt waits here, polling every 5s for up to 120s, and usually
+# succeeds on its own.
+#
+# Non-zero exit AFTER the wait (tailscale missing / still logged out / no IP
+# after 2min) hands control back to systemd: Restart=always with exponential
+# backoff (RestartSteps/RestartMaxDelaySec) keeps trying for ~12 minutes and
+# only then parks the unit in `failed` (StartLimit*), so the journal stays
+# clean for a genuinely broken tailnet. `tailscale up` + `systemctl
+# reset-failed` (or a reboot) brings it back.
 
-IP=$(/usr/bin/tailscale ip -4) || exit 1
-[ -n "$IP" ] || exit 1
+IP=
+waited=0
+while [ "$waited" -lt 120 ]; do
+  IP=$(/usr/bin/tailscale ip -4 2>/dev/null)
+  [ -n "$IP" ] && break
+  if [ "$waited" -eq 0 ]; then
+    echo "sem IP da tailnet (tailscale ainda subindo) - aguardando ate 120s"
+  fi
+  waited=$((waited + 5))
+  sleep 5
+done
+
+if [ -z "$IP" ]; then
+  # one last try with stderr visible: the reason (state: NoState /
+  # "Logged out.") is what tells apart "still booting" from "needs tailscale up"
+  err=$(/usr/bin/tailscale ip -4 2>&1 | tail -n 1)
+  echo "sem IP da tailnet depois de ${waited}s: ${err:-sem saida do CLI tailscale}"
+  exit 1
+fi
 
 exec {{ home }}/.local/bin/hermes dashboard --host "$IP" --port 9119 --no-open
