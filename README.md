@@ -79,6 +79,37 @@ ansible-playbook local.yml -K -e setup=server
   On `server`, harden this with `DOCKER-USER` rules if services must only be
   reachable from the tailnet.
 
+## Hermes workspace volume (both setups)
+
+The `hermes` tag also creates `~/hermes-workspace` (owner: your user, `0755`) — the
+host directory the Hermes Docker terminal backend bind-mounts. The playbook
+only creates the folder; pointing Hermes at it is a manual edit in
+`~/.hermes/config.yaml` (`hermes config edit`):
+
+```yaml
+terminal:
+  backend: "docker"
+  cwd: "/workspace"                 # path inside the container
+  docker_volumes:
+    - "/home/<user>/hermes-workspace:/workspace"
+  docker_run_as_host_user: true     # bind-mounted files keep your ownership
+```
+
+- **Merge into the existing `docker_volumes:` list.** A duplicate key further
+  down the file silently overrides the first one (YAML), so never add a second
+  `docker_volumes:` block.
+- `docker_run_as_host_user: true` appends `--user $(id -u):$(id -g)`, so files
+  written through the mount end up owned by you instead of root — the
+  trade-off is that the container can no longer `apt install` or write
+  root-owned paths.
+- Changing a mount argument changes the container's `hermes-environment`
+  digest: the next call starts a fresh sandbox, and the old `Exited` one is
+  swept by the orphan reaper after `2 × lifetime_seconds` (600s). Running
+  containers are never touched.
+- Per-invocation override without touching the file:
+  `TERMINAL_DOCKER_VOLUMES='["/home/<user>/hermes-workspace:/workspace"]' hermes`
+- Verify the effective values with `hermes config get terminal`.
+
 ## Hermes dashboard (server only)
 
 The playbook creates and enables `hermes-dashboard.service`

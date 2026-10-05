@@ -12,6 +12,20 @@
 # `hermes setup` / `hermes model` are interactive and stay manual - run them
 # once after provisioning to pick the provider/API key.
 
+# Host side of the bind mount for the Hermes container: the dir a
+# `docker run -v` / compose `volumes:` entry points at. Created together with
+# the install so it exists on both setups as soon as Hermes is provisioned,
+# even when the `creates` guard below skips the installer (or it fails offline).
+# `file` is idempotent - re-runs report ok, not changed.
+- name: software | hermes | workspace dir
+  tags:
+    - hermes
+  become_user: "{{ user }}"
+  file:
+    path: "{{ home }}/hermes-workspace"
+    state: directory
+    mode: "0755"
+
 - name: software | hermes | install (official script)
   tags:
     - hermes
